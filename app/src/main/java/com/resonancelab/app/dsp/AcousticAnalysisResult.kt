@@ -50,6 +50,10 @@ data class AcousticMetrics(
     val rmsDbfs: Float = -90.0f,
     /** Signal to Noise Ratio in dB above noise floor */
     val snrDb: Float = 0.0f,
+    /** Spectral Flatness Measure (0.0 = purely tonal resonance, 1.0 = white noise) */
+    val spectralFlatness: Float = 0.0f,
+    /** Crest Factor (Peak amplitude / RMS amplitude) */
+    val crestFactor: Float = 1.0f,
     /** Prominent secondary resonance frequencies in Hz */
     val secondaryPeaksHz: List<Float> = emptyList()
 )

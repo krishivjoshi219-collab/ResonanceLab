@@ -122,6 +122,10 @@ class ReportExporter(private val context: Context) {
         drawMetricRow(canvas, "Signal to Noise Ratio (SNR)", "+${String.format("%.1f", result.metrics.snrDb)} dB", 36f, y, bodyPaint, labelPaint)
         y += 20f
         drawMetricRow(canvas, "RMS Energy Level", "${String.format("%.1f", result.metrics.rmsDbfs)} dBFS", 36f, y, bodyPaint, labelPaint)
+        y += 20f
+        drawMetricRow(canvas, "Spectral Flatness", String.format("%.3f", result.metrics.spectralFlatness), 36f, y, bodyPaint, labelPaint)
+        y += 20f
+        drawMetricRow(canvas, "Crest Factor", String.format("%.2f", result.metrics.crestFactor), 36f, y, bodyPaint, labelPaint)
         y += 30f
 
         // Active Sonar / Liquid Level if available
@@ -218,6 +222,8 @@ class ReportExporter(private val context: Context) {
             writer.println("# Spectral Centroid (Hz): ${result.metrics.spectralCentroidHz}")
             writer.println("# RMS Level (dBFS): ${result.metrics.rmsDbfs}")
             writer.println("# SNR Margin (dB): ${result.metrics.snrDb}")
+            writer.println("# Spectral Flatness: ${result.metrics.spectralFlatness}")
+            writer.println("# Crest Factor: ${result.metrics.crestFactor}")
             writer.println()
             writer.println("Bin_Index,Frequency_Hz,Magnitude_Linear,Magnitude_Normalized_Db")
 

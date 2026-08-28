@@ -179,9 +179,9 @@ fun MaterialStateCard(
                     modifier = Modifier.weight(1f)
                 )
                 MetricPill(
-                    label = "RMS LEVEL",
-                    value = "${String.format("%.1f", metrics.rmsDbfs)} dBFS",
-                    accentColor = TextPrimary,
+                    label = "FLATNESS",
+                    value = String.format("%.2f", metrics.spectralFlatness),
+                    accentColor = if (metrics.spectralFlatness < 0.25f) NeonCyan else TextPrimary,
                     modifier = Modifier.weight(1f)
                 )
                 MetricPill(

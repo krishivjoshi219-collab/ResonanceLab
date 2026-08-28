@@ -41,21 +41,24 @@ class MaterialClassifier {
         val q = metrics.qFactor
         val decay = metrics.energyDecayRateDbPerSec
         val centroid = metrics.spectralCentroidHz
+        val sfm = metrics.spectralFlatness
         val hasSecondaryPeaks = metrics.secondaryPeaksHz.isNotEmpty()
 
         // Evaluate Hollow / Cavity
         var hollowScore = 0.0f
-        if (freq >= hollowMinFreqHz) hollowScore += 0.35f
-        if (q >= hollowMinQFactor) hollowScore += 0.35f
+        if (freq >= hollowMinFreqHz) hollowScore += 0.30f
+        if (q >= hollowMinQFactor) hollowScore += 0.30f
         if (decay <= hollowMaxDecayRate && decay > 0.1f) hollowScore += 0.20f
         if (centroid >= 1400.0f) hollowScore += 0.10f
+        if (sfm < 0.25f) hollowScore += 0.10f // Tonal narrowband resonance bonus
 
         // Evaluate Solid / Substrate
         var solidScore = 0.0f
-        if (freq <= solidMaxFreqHz) solidScore += 0.35f
-        if (q <= solidMaxQFactor) solidScore += 0.30f
+        if (freq <= solidMaxFreqHz) solidScore += 0.30f
+        if (q <= solidMaxQFactor) solidScore += 0.25f
         if (decay >= solidMinDecayRate) solidScore += 0.25f
         if (centroid < 1100.0f) solidScore += 0.10f
+        if (sfm > 0.35f) solidScore += 0.10f // Broadband damped smear bonus
 
         // Evaluate Void / Boundary Delamination
         var voidScore = 0.0f

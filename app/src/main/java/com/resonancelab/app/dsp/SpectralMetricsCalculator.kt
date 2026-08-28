@@ -1,6 +1,9 @@
 package com.resonancelab.app.dsp
 
 import com.resonancelab.app.audio.AudioConfig
+import kotlin.math.abs
+import kotlin.math.exp
+import kotlin.math.ln
 import kotlin.math.log10
 import kotlin.math.max
 import kotlin.math.sqrt
@@ -38,16 +41,20 @@ class SpectralMetricsCalculator(
         rawSamples: FloatArray,
         timestampMs: Long = System.currentTimeMillis()
     ): AcousticMetrics {
-        // 1. RMS & Decibel Level
+        // 1. RMS, Decibel Level & Crest Factor
         var sumSquares = 0.0f
+        var maxPeakSample = 0.0f
         val sampleCount = rawSamples.size
         for (i in 0 until sampleCount) {
             val s = rawSamples[i]
+            val absS = abs(s)
+            if (absS > maxPeakSample) maxPeakSample = absS
             sumSquares += s * s
         }
         val rms = sqrt(max(1e-12f, sumSquares / sampleCount.toFloat()))
         val rmsDbfs = (20.0f * log10(rms)).coerceIn(-100.0f, 0.0f)
         val snrDb = max(0.0f, rmsDbfs - calibratedNoiseFloorDb)
+        val crestFactor = (maxPeakSample / rms).coerceIn(1.0f, 50.0f)
 
         // Store RMS history
         rmsHistory[historyIndex] = rmsDbfs
@@ -105,6 +112,9 @@ class SpectralMetricsCalculator(
         // 6. Secondary Resonance Peaks (harmonic modes / void splits)
         val secondaryPeaks = findSecondaryPeaks(magnitudes, peakBin, minBin, maxBin, maxMag)
 
+        // 7. Spectral Flatness Measure (SFM)
+        val sfm = computeSpectralFlatness(magnitudes, minBin, maxBin)
+
         return AcousticMetrics(
             peakFrequencyHz = interpolatedPeakFreq,
             peakMagnitudeDb = peakMagDb,
@@ -113,6 +123,8 @@ class SpectralMetricsCalculator(
             energyDecayRateDbPerSec = decayRate,
             rmsDbfs = rmsDbfs,
             snrDb = snrDb,
+            spectralFlatness = sfm,
+            crestFactor = crestFactor,
             secondaryPeaksHz = secondaryPeaks
         )
     }
@@ -192,6 +204,34 @@ class SpectralMetricsCalculator(
 
         // If slope is negative, decay rate is positive magnitude
         return if (slope < 0) (-slope).toFloat().coerceIn(0.0f, 250.0f) else 0.0f
+    }
+
+    /**
+     * Computes Spectral Flatness Measure (SFM = Geometric Mean / Arithmetic Mean of spectrum).
+     */
+    private fun computeSpectralFlatness(
+        magnitudes: FloatArray,
+        minBin: Int,
+        maxBin: Int
+    ): Float {
+        var logSum = 0.0
+        var arithmeticSum = 0.0
+        val count = maxBin - minBin + 1
+        if (count <= 0) return 0.0f
+
+        val eps = 1e-9
+        for (k in minBin..maxBin) {
+            val mag = magnitudes[k].toDouble() + eps
+            logSum += ln(mag)
+            arithmeticSum += mag
+        }
+
+        val geometricMean = exp(logSum / count)
+        val arithmeticMean = arithmeticSum / count
+
+        if (arithmeticMean <= eps) return 0.0f
+        val sfm = (geometricMean / arithmeticMean).toFloat()
+        return sfm.coerceIn(0.0f, 1.0f)
     }
 
     /**
