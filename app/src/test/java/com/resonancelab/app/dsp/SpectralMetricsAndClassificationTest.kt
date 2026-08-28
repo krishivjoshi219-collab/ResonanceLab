@@ -115,7 +115,7 @@ class SpectralMetricsAndClassificationTest {
 
         val samples = FloatArray(2048) { 0.1f }
         val metrics = calculator.computeMetrics(magnitudes, samples)
-        assertTrue("Q-factor should be computed cleanly", metrics.qFactor > 1.0f)
-        assertTrue("Peak frequency should be near peakBin * binRes", metrics.peakFrequencyHz > 1000.0f)
+        assertEquals(19.09f, metrics.qFactor, 0.2f)
+        assertEquals(peakBin * binRes, metrics.peakFrequencyHz, 0.01f)
     }
 }
