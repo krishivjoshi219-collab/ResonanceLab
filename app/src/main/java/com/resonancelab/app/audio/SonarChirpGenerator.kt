@@ -170,7 +170,7 @@ class SonarChirpGenerator(
         for (d in minSkipSamples until maxDelay step 2) {
             var dot = 0.0f
             var sigEnergy = 0.0f
-            for (n in 0 until chirpLen step 2) {
+            for (n in 0 until chirpLen) {
                 val s = inputSamples[d + n]
                 dot += s * chirp[n]
                 sigEnergy += s * s

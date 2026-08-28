@@ -169,13 +169,24 @@ class FastFourierTransform(val size: Int = 2048) {
         maxDb: Float = 0.0f
     ) {
         computeMagnitudeSpectrum(inputSamples, inputOffset, outNormalizedDb)
+        convertMagnitudesToNormalizedDb(outNormalizedDb, outNormalizedDb, minDb, maxDb)
+    }
 
+    /**
+     * Converts a precomputed linear magnitude spectrum to a normalized [0.0f..1.0f] decibel spectrum.
+     */
+    fun convertMagnitudesToNormalizedDb(
+        linearMagnitudes: FloatArray,
+        outNormalizedDb: FloatArray,
+        minDb: Float = -90.0f,
+        maxDb: Float = 0.0f
+    ) {
         val dbRange = maxDb - minDb
-        val numBins = numMagnitudeBins
+        val numBins = numMagnitudeBins.coerceAtMost(linearMagnitudes.size).coerceAtMost(outNormalizedDb.size)
         val eps = 1e-7f
 
         for (k in 0 until numBins) {
-            val mag = outNormalizedDb[k]
+            val mag = linearMagnitudes[k]
             val db = 20.0f * log10(mag + eps)
             val normalized = (db - minDb) / dbRange
             outNormalizedDb[k] = normalized.coerceIn(0.0f, 1.0f)
