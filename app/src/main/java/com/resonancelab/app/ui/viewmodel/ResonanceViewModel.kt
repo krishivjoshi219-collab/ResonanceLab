@@ -7,6 +7,7 @@ import com.resonancelab.app.audio.AudioRecordManager
 import com.resonancelab.app.billing.BillingManager
 import com.resonancelab.app.dsp.AcousticAnalysisResult
 import com.resonancelab.app.dsp.MaterialType
+import com.resonancelab.app.dsp.PresetMaterial
 import com.resonancelab.app.export.ReportExporter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -18,6 +19,7 @@ enum class MainTab(val title: String) {
     LIVE_SPECTRUM("LIVE TAP"),
     ACTIVE_SONAR("ACTIVE SONAR"),
     LIQUID_LEVEL("LIQUID LEVEL"),
+    THICKNESS_GAUGE("THICKNESS"),
     EXPORT_LOGS("EXPORT / LOGS")
 }
 
@@ -86,7 +88,7 @@ class ResonanceViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun selectTab(tab: MainTab) {
-        if ((tab == MainTab.ACTIVE_SONAR || tab == MainTab.LIQUID_LEVEL || tab == MainTab.EXPORT_LOGS) && !isPro.value) {
+        if ((tab == MainTab.ACTIVE_SONAR || tab == MainTab.LIQUID_LEVEL || tab == MainTab.THICKNESS_GAUGE || tab == MainTab.EXPORT_LOGS) && !isPro.value) {
             // Show paywall if accessing Pro features without entitlement
             _isPaywallOpen.value = true
         }
@@ -122,6 +124,10 @@ class ResonanceViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun setLiquidContainerHeight(heightCm: Float) {
         audioManager.liquidEstimator.totalHeightCm = heightCm
+    }
+
+    fun setThicknessMaterial(material: PresetMaterial) {
+        audioManager.thicknessEstimator.selectedMaterial = material
     }
 
     fun captureSnapshot() {

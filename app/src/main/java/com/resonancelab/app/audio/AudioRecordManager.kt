@@ -10,6 +10,7 @@ import com.resonancelab.app.dsp.LiquidLevelEstimator
 import com.resonancelab.app.dsp.MaterialClassification
 import com.resonancelab.app.dsp.MaterialClassifier
 import com.resonancelab.app.dsp.MaterialType
+import com.resonancelab.app.dsp.MaterialThicknessEstimator
 import com.resonancelab.app.dsp.SpectralMetricsCalculator
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -35,7 +36,8 @@ class AudioRecordManager(
     val metricsCalculator: SpectralMetricsCalculator = SpectralMetricsCalculator(),
     val classifier: MaterialClassifier = MaterialClassifier(),
     val liquidEstimator: LiquidLevelEstimator = LiquidLevelEstimator(),
-    val sonarGenerator: SonarChirpGenerator = SonarChirpGenerator()
+    val sonarGenerator: SonarChirpGenerator = SonarChirpGenerator(),
+    val thicknessEstimator: MaterialThicknessEstimator = MaterialThicknessEstimator()
 ) {
     private var audioRecord: AudioRecord? = null
     private var captureJob: Job? = null
@@ -227,6 +229,8 @@ class AudioRecordManager(
                 // Copy spectrum values to immutable array for emission
                 System.arraycopy(normalizedDbSpectrum, 0, broadcastSpectrum, 0, numBins)
 
+                val thicknessResult = thicknessEstimator.estimate(metrics.peakFrequencyHz, metrics)
+
                 // Update UI state
                 _analysisState.value = AcousticAnalysisResult(
                     timestampMs = now,
@@ -236,7 +240,8 @@ class AudioRecordManager(
                     rawMagnitudes = rawMagnitudeSpectrum.copyOf(),
                     isImpactDetected = isImpact,
                     sonarEcho = sonarEcho,
-                    liquidLevel = liquidLevel
+                    liquidLevel = liquidLevel,
+                    thicknessResult = thicknessResult
                 )
 
                 // Stream spectrum to waterfall canvas

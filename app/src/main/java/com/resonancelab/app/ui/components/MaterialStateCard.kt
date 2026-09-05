@@ -191,6 +191,27 @@ fun MaterialStateCard(
                     modifier = Modifier.weight(1f)
                 )
             }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                MetricPill(
+                    label = "MUSICAL PITCH",
+                    value = metrics.musicalNote,
+                    accentColor = PlasmaPink,
+                    modifier = Modifier.weight(1f)
+                )
+                MetricPill(
+                    label = "CENTS DEVIATION",
+                    value = if (metrics.pitchCentsOff > 0) "+${metrics.pitchCentsOff} ¢" else "${metrics.pitchCentsOff} ¢",
+                    accentColor = if (kotlin.math.abs(metrics.pitchCentsOff) < 15) NeonEmerald else PlasmaPink,
+                    modifier = Modifier.weight(1f)
+                )
+                Spacer(modifier = Modifier.weight(1f))
+            }
         }
     }
 }

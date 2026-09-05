@@ -51,7 +51,11 @@ data class AcousticMetrics(
     /** Signal to Noise Ratio in dB above noise floor */
     val snrDb: Float = 0.0f,
     /** Prominent secondary resonance frequencies in Hz */
-    val secondaryPeaksHz: List<Float> = emptyList()
+    val secondaryPeaksHz: List<Float> = emptyList(),
+    /** Nearest musical note string representation (e.g. "C#4") */
+    val musicalNote: String = "--",
+    /** Pitch deviation from the nearest musical note in cents (-50 to +50) */
+    val pitchCentsOff: Int = 0
 )
 
 /**
@@ -89,7 +93,8 @@ data class AcousticAnalysisResult(
     val rawMagnitudes: FloatArray = FloatArray(1024),
     val isImpactDetected: Boolean = false,
     val sonarEcho: SonarEchoResult? = null,
-    val liquidLevel: LiquidLevelResult? = null
+    val liquidLevel: LiquidLevelResult? = null,
+    val thicknessResult: ThicknessResult? = null
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

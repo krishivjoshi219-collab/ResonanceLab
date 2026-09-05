@@ -105,6 +105,8 @@ class SpectralMetricsCalculator(
         // 6. Secondary Resonance Peaks (harmonic modes / void splits)
         val secondaryPeaks = findSecondaryPeaks(magnitudes, peakBin, minBin, maxBin, maxMag)
 
+        val (note, cents) = calculateMusicalPitch(interpolatedPeakFreq)
+
         return AcousticMetrics(
             peakFrequencyHz = interpolatedPeakFreq,
             peakMagnitudeDb = peakMagDb,
@@ -113,8 +115,37 @@ class SpectralMetricsCalculator(
             energyDecayRateDbPerSec = decayRate,
             rmsDbfs = rmsDbfs,
             snrDb = snrDb,
-            secondaryPeaksHz = secondaryPeaks
+            secondaryPeaksHz = secondaryPeaks,
+            musicalNote = note,
+            pitchCentsOff = cents
         )
+    }
+
+    /**
+     * Calculates the nearest musical note and cents deviation from A4 = 440 Hz.
+     */
+    private fun calculateMusicalPitch(freqHz: Float): Pair<String, Int> {
+        if (freqHz < 16.0f) return Pair("--", 0)
+
+        val noteNames = arrayOf("C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B")
+        val a4 = 440.0f
+
+        // Number of half-steps from A4
+        val n = 12.0 * kotlin.math.log2(freqHz / a4)
+
+        val nearestNote = kotlin.math.round(n).toInt()
+        val cents = ((n - nearestNote) * 100).toInt()
+
+        // A4 is note index 9 in the octave starting at C, octave 4
+        // Calculate octave and note index
+        val noteIndex = (nearestNote + 9) % 12
+        val adjustedNoteIndex = if (noteIndex < 0) noteIndex + 12 else noteIndex
+
+        val octave = 4 + (nearestNote + 9 - adjustedNoteIndex) / 12
+
+        val noteName = noteNames[adjustedNoteIndex] + octave.toString()
+
+        return Pair(noteName, cents)
     }
 
     /**
