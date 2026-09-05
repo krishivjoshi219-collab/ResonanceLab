@@ -63,6 +63,7 @@ import com.resonancelab.app.ui.components.PaywallSheet
 import com.resonancelab.app.ui.components.SonarChirpPanel
 import com.resonancelab.app.ui.components.SpectrogramCanvas
 import com.resonancelab.app.ui.components.SpectrumBarChart
+import com.resonancelab.app.ui.components.ThicknessGaugePanel
 import com.resonancelab.app.ui.theme.CyberCardBorder
 import com.resonancelab.app.ui.theme.CyberDeepSlate
 import com.resonancelab.app.ui.theme.CyberSurfaceVariant
@@ -209,6 +210,33 @@ fun MainScreen(viewModel: ResonanceViewModel) {
                                 liquidResult = analysisResult.liquidLevel,
                                 isPro = isPro,
                                 onContainerHeightChange = { viewModel.setLiquidContainerHeight(it) },
+                                onUnlockPro = { viewModel.openPaywall() }
+                            )
+                        }
+
+                        item {
+                            SpectrumBarChart(
+                                normalizedMagnitudes = analysisResult.normalizedMagnitudes,
+                                peakFrequencyHz = analysisResult.metrics.peakFrequencyHz,
+                                qFactor = analysisResult.metrics.qFactor,
+                                heightDp = 160
+                            )
+                        }
+
+                        item {
+                            MaterialStateCard(
+                                classification = analysisResult.classification,
+                                metrics = analysisResult.metrics
+                            )
+                        }
+                    }
+
+                    MainTab.THICKNESS_GAUGE -> {
+                        item {
+                            ThicknessGaugePanel(
+                                result = analysisResult.thicknessResult,
+                                isPro = isPro,
+                                onMaterialChange = { viewModel.setThicknessMaterial(it) },
                                 onUnlockPro = { viewModel.openPaywall() }
                             )
                         }
