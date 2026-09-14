@@ -77,7 +77,7 @@ class SpectralMetricsCalculator(
             val gamma = 20.0f * log10(magnitudes[peakBin + 1] + 1e-9f)
 
             val denom = alpha - 2.0f * beta + gamma
-            if (denom != 0.0f) {
+            if (denom < 0.0f) {
                 val delta = 0.5f * (alpha - gamma) / denom
                 interpolatedPeakFreq = (peakBin + delta.coerceIn(-1.0f, 1.0f)) * binResolution
             }
@@ -147,7 +147,7 @@ class SpectralMetricsCalculator(
         for (k in peakBin + 1 until numBins - 1) {
             if (magnitudes[k] <= halfPowerMag) {
                 val frac = if (magnitudes[k - 1] != magnitudes[k]) {
-                    (halfPowerMag - magnitudes[k]) / (magnitudes[k - 1] - magnitudes[k])
+                    (magnitudes[k - 1] - halfPowerMag) / (magnitudes[k - 1] - magnitudes[k])
                 } else 0.5f
                 fHigh = (k - 1 + frac) * binResolution
                 break

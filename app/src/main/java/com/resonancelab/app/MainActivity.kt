@@ -65,7 +65,7 @@ class MainActivity : ComponentActivity() {
     private val viewModel: ResonanceViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate()
+        super.onCreate(savedInstanceState)
 
         setContent {
             ResonanceLabTheme {

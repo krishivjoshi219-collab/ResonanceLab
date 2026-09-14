@@ -31,19 +31,21 @@ class LiquidLevelEstimator {
      * @param metrics Full acoustic metrics.
      */
     fun estimate(peakFreqHz: Float, metrics: AcousticMetrics): LiquidLevelResult {
+        val safeHeight = if (totalHeightCm <= 0.0f) 30.0f else totalHeightCm
+
         if (peakFreqHz < 80.0f || metrics.rmsDbfs < -75.0f || metrics.snrDb < 6.0f) {
             return LiquidLevelResult(
                 fillPercentage = 0.0f,
                 liquidHeightCm = 0.0f,
-                totalContainerHeightCm = totalHeightCm,
+                totalContainerHeightCm = safeHeight,
                 fundamentalShiftHz = peakFreqHz,
                 confidence = 0.0f
             )
         }
 
-        // Theoretical minimum frequency for completely empty container (L_air = totalHeightCm)
-        // f_empty = v / (4 * totalHeightCm)
-        val fEmpty = speedOfSoundAirCmS / (4.0f * totalHeightCm)
+        // Theoretical minimum frequency for completely empty container (L_air = safeHeight)
+        // f_empty = v / (4 * safeHeight)
+        val fEmpty = speedOfSoundAirCmS / (4.0f * safeHeight)
 
         // If detected peak is lower than empty container fundamental, use base frequency
         val effectiveFreq = max(fEmpty * 0.8f, peakFreqHz)
@@ -52,11 +54,11 @@ class LiquidLevelEstimator {
         val estimatedAirHeightCm = speedOfSoundAirCmS / (4.0f * effectiveFreq)
 
         // Liquid height in cm
-        val rawLiquidHeightCm = totalHeightCm - estimatedAirHeightCm
-        val liquidHeightCm = rawLiquidHeightCm.coerceIn(0.0f, totalHeightCm)
+        val rawLiquidHeightCm = safeHeight - estimatedAirHeightCm
+        val liquidHeightCm = rawLiquidHeightCm.coerceIn(0.0f, safeHeight)
 
         // Fill percentage
-        val fillPercentage = (liquidHeightCm / totalHeightCm * 100.0f).coerceIn(0.0f, 100.0f)
+        val fillPercentage = (liquidHeightCm / safeHeight * 100.0f).coerceIn(0.0f, 100.0f)
 
         // Confidence evaluation based on Q-factor and SNR
         val qScore = (metrics.qFactor / 15.0f).coerceIn(0.4f, 1.0f)
@@ -66,7 +68,7 @@ class LiquidLevelEstimator {
         return LiquidLevelResult(
             fillPercentage = fillPercentage,
             liquidHeightCm = liquidHeightCm,
-            totalContainerHeightCm = totalHeightCm,
+            totalContainerHeightCm = safeHeight,
             fundamentalShiftHz = peakFreqHz,
             confidence = confidence
         )

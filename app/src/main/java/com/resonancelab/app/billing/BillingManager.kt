@@ -4,12 +4,14 @@ import android.app.Activity
 import android.content.Context
 import com.revenuecat.purchases.CustomerInfo
 import com.revenuecat.purchases.Package
+import com.revenuecat.purchases.PurchaseParams
 import com.revenuecat.purchases.Purchases
 import com.revenuecat.purchases.PurchasesConfiguration
 import com.revenuecat.purchases.PurchasesError
 import com.revenuecat.purchases.interfaces.PurchaseCallback
 import com.revenuecat.purchases.interfaces.ReceiveCustomerInfoCallback
 import com.revenuecat.purchases.interfaces.ReceiveOfferingsCallback
+import com.revenuecat.purchases.interfaces.UpdatedCustomerInfoListener
 import com.revenuecat.purchases.models.StoreTransaction
 import com.revenuecat.purchases.Offerings
 import kotlinx.coroutines.CoroutineScope
@@ -104,7 +106,7 @@ class BillingManager(
             }
 
             // Listen for customer info updates
-            Purchases.sharedInstance.updatedCustomerInfoListener = { customerInfo ->
+            Purchases.sharedInstance.updatedCustomerInfoListener = UpdatedCustomerInfoListener { customerInfo ->
                 updateEntitlements(customerInfo)
             }
 
@@ -175,8 +177,8 @@ class BillingManager(
         }
         _isLoading.value = true
         try {
-            Purchases.sharedInstance.purchaseWith(
-                com.revenuecat.purchases.PurchaseParams.Builder(activity, rcPackage).build(),
+            Purchases.sharedInstance.purchase(
+                PurchaseParams.Builder(activity, rcPackage).build(),
                 object : PurchaseCallback {
                     override fun onCompleted(storeTransaction: StoreTransaction, customerInfo: CustomerInfo) {
                         _isLoading.value = false

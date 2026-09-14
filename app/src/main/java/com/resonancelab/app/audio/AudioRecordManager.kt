@@ -211,10 +211,9 @@ class AudioRecordManager(
                     outMagnitudes = rawMagnitudeSpectrum
                 )
 
-                // Compute normalized 0.0..1.0 dB spectrum for visualizer
-                fftEngine.computeNormalizedDbSpectrum(
-                    inputSamples = fftInputWindow,
-                    inputOffset = 0,
+                // Compute normalized 0.0..1.0 dB spectrum for visualizer from precomputed magnitudes
+                fftEngine.convertMagnitudesToNormalizedDb(
+                    linearMagnitudes = rawMagnitudeSpectrum,
                     outNormalizedDb = normalizedDbSpectrum,
                     minDb = AudioConfig.MIN_DB,
                     maxDb = AudioConfig.MAX_DB
