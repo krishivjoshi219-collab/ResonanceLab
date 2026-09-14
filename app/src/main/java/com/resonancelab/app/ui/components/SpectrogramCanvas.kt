@@ -98,9 +98,9 @@ fun SpectrogramCanvas(
         modifier = modifier
             .fillMaxWidth()
             .height(canvasHeightDp.dp)
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(16.dp))
             .background(CyberVoidBlack)
-            .border(1.dp, CyberCardBorder, RoundedCornerShape(8.dp))
+            .border(1.dp, CyberCardBorder, RoundedCornerShape(16.dp))
     ) {
         Canvas(modifier = Modifier.fillMaxSize()) {
             // Draw scrolling spectrogram texture stretched across canvas
@@ -121,44 +121,30 @@ fun SpectrogramCanvas(
             }
         }
 
-        // Frequency Legend Labels
         Text(
             text = "24 kHz",
             color = TextMuted,
-            fontSize = 9.sp,
-            fontFamily = FontFamily.Monospace,
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(top = 4.dp, end = 6.dp)
+            fontSize = 11.sp,
+            modifier = Modifier.align(Alignment.TopEnd).padding(top = 8.dp, end = 10.dp)
         )
         Text(
             text = "12 kHz",
             color = TextMuted,
-            fontSize = 9.sp,
-            fontFamily = FontFamily.Monospace,
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(top = 4.dp)
+            fontSize = 11.sp,
+            modifier = Modifier.align(Alignment.TopCenter).padding(top = 8.dp)
         )
         Text(
             text = "0 Hz",
             color = TextMuted,
-            fontSize = 9.sp,
-            fontFamily = FontFamily.Monospace,
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(top = 4.dp, start = 6.dp)
+            fontSize = 11.sp,
+            modifier = Modifier.align(Alignment.TopStart).padding(top = 8.dp, start = 10.dp)
         )
-
-        // Waterfall Direction Indicator
         Text(
-            text = "▼ TIME (LIVE)",
-            color = NeonCyan.copy(alpha = 0.6f),
-            fontSize = 8.sp,
-            fontFamily = FontFamily.Monospace,
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-                .padding(bottom = 4.dp, start = 6.dp)
+            text = "Live",
+            color = NeonEmerald,
+            fontSize = 11.sp,
+            fontWeight = FontWeight.Medium,
+            modifier = Modifier.align(Alignment.BottomStart).padding(bottom = 8.dp, start = 10.dp)
         )
     }
 }

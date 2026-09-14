@@ -60,10 +60,10 @@ fun CalibrationBar(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(10.dp))
+            .clip(RoundedCornerShape(16.dp))
             .background(CyberDeepSlate)
-            .border(1.dp, CyberCardBorder, RoundedCornerShape(10.dp))
-            .padding(10.dp)
+            .border(1.dp, CyberCardBorder, RoundedCornerShape(16.dp))
+            .padding(16.dp)
     ) {
         Column {
             Row(
@@ -73,16 +73,15 @@ fun CalibrationBar(
             ) {
                 Column {
                     Text(
-                        text = "ENVIRONMENT CALIBRATION",
+                        text = "Calibration",
                         color = TextPrimary,
-                        fontSize = 11.sp,
-                        fontFamily = FontFamily.Monospace
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium
                     )
                     Text(
-                        text = "NOISE FLOOR: ${String.format("%.1f", calibratedNoiseFloorDb)} dBFS",
-                        color = NeonAmber,
-                        fontSize = 10.sp,
-                        fontFamily = FontFamily.Monospace
+                        text = "Noise floor ${String.format("%.1f", calibratedNoiseFloorDb)} dBFS",
+                        color = TextSecondary,
+                        fontSize = 12.sp
                     )
                 }
 
@@ -91,18 +90,12 @@ fun CalibrationBar(
                         onClick = { onCalibrateNoiseFloor(currentRmsDbfs) },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = CyberSurfaceVariant,
-                            contentColor = NeonCyan
+                            contentColor = TextPrimary
                         ),
-                        shape = RoundedCornerShape(6.dp),
-                        modifier = Modifier
-                            .height(32.dp)
-                            .border(0.5.dp, NeonCyan.copy(alpha = 0.5f), RoundedCornerShape(6.dp))
+                        shape = RoundedCornerShape(10.dp),
+                        modifier = Modifier.height(36.dp)
                     ) {
-                        Text(
-                            text = "CALIBRATE",
-                            fontSize = 10.sp,
-                            fontFamily = FontFamily.Monospace
-                        )
+                        Text(text = "Calibrate", fontSize = 13.sp, fontWeight = FontWeight.Medium)
                     }
 
                     Spacer(modifier = Modifier.width(6.dp))
@@ -126,17 +119,12 @@ fun CalibrationBar(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
+                        Text(text = "Sensitivity", color = TextSecondary, fontSize = 12.sp)
                         Text(
-                            text = "GAIN SENSITIVITY",
-                            color = TextSecondary,
-                            fontSize = 10.sp,
-                            fontFamily = FontFamily.Monospace
-                        )
-                        Text(
-                            text = "${String.format("%.1f", sensitivity)}x",
-                            color = NeonCyan,
-                            fontSize = 10.sp,
-                            fontFamily = FontFamily.Monospace
+                            text = "${String.format("%.1f", sensitivity)}×",
+                            color = TextPrimary,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Medium
                         )
                     }
 

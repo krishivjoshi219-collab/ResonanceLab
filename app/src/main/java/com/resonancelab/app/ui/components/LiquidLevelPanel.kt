@@ -67,11 +67,10 @@ fun LiquidLevelPanel(
     val result = liquidResult ?: LiquidLevelResult(totalContainerHeightCm = containerHeight)
 
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .border(1.dp, if (isPro) NeonCyan.copy(alpha = 0.5f) else CyberCardBorder, RoundedCornerShape(12.dp)),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = CyberDeepSlate)
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = CyberDeepSlate),
+        border = androidx.compose.foundation.BorderStroke(1.dp, CyberCardBorder)
     ) {
         Box(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.padding(14.dp)) {
@@ -90,11 +89,10 @@ fun LiquidLevelPanel(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "ACOUSTIC LIQUID ESTIMATOR",
-                            color = NeonCyan,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = FontFamily.Monospace
+                            text = "Liquid level",
+                            color = TextPrimary,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.SemiBold
                         )
                     }
 
@@ -117,10 +115,10 @@ fun LiquidLevelPanel(
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Text(
-                    text = "Tap container sidewall. Estimates fill height via quarter-wave acoustic air column resonance shift.",
+                    text = "Tap the container wall to estimate fill height from air-column resonance.",
                     color = TextSecondary,
-                    fontSize = 11.sp,
-                    lineHeight = 15.sp
+                    fontSize = 13.sp,
+                    lineHeight = 18.sp
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))

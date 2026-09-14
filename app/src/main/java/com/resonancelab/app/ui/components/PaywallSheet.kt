@@ -141,25 +141,21 @@ fun PaywallSheet(
 
             Spacer(modifier = Modifier.height(14.dp))
 
-            // Title & Subtitle
             Text(
-                text = "Unlock Advanced Acoustic Sonar & Lab Analysis",
+                text = "ResonanceLab Pro",
                 color = TextPrimary,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.Monospace,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center,
-                lineHeight = 26.sp
+                lineHeight = 28.sp
             )
-
             Spacer(modifier = Modifier.height(6.dp))
-
             Text(
-                text = "Professional non-destructive testing, ultrasound radar, and PDF report certification.",
+                text = "Advanced sonar, liquid estimation, and certified reports.",
                 color = TextSecondary,
-                fontSize = 12.sp,
+                fontSize = 13.sp,
                 textAlign = TextAlign.Center,
-                lineHeight = 16.sp
+                lineHeight = 18.sp
             )
 
             Spacer(modifier = Modifier.height(20.dp))

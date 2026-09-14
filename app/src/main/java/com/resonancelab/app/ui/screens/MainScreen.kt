@@ -28,11 +28,14 @@ import androidx.compose.material.icons.filled.MicOff
 import androidx.compose.material.icons.filled.PictureAsPdf
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Stop
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -124,19 +127,16 @@ fun MainScreen(viewModel: ResonanceViewModel) {
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            // Mode Navigation Tabs
             ModeTabRow(
                 selectedTab = selectedTab,
                 isPro = isPro,
                 onSelectTab = { viewModel.selectTab(it) }
             )
-
-            // Dynamic Content
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 14.dp, vertical = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 when (selectedTab) {
                     MainTab.LIVE_SPECTRUM -> {
@@ -242,30 +242,28 @@ fun MainScreen(viewModel: ResonanceViewModel) {
 
                         item {
                             Text(
-                                text = "ACOUSTIC TEST AUDIT TRAIL (${snapshotHistory.size} SAVED)",
+                                text = "History · ${snapshotHistory.size} saved",
                                 color = TextSecondary,
-                                fontSize = 12.sp,
-                                fontFamily = FontFamily.Monospace,
-                                fontWeight = FontWeight.Bold,
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Medium,
                                 modifier = Modifier.padding(top = 4.dp)
                             )
                         }
-
                         if (snapshotHistory.isEmpty()) {
                             item {
                                 Box(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .clip(RoundedCornerShape(8.dp))
+                                        .clip(RoundedCornerShape(12.dp))
                                         .background(CyberDeepSlate)
-                                        .padding(24.dp),
+                                        .padding(20.dp),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Text(
-                                        text = "No saved snapshots yet. Tap the snapshot button in top bar during live testing to log samples.",
+                                        text = "No snapshots yet. Use the camera button above during a test to save a sample here.",
                                         color = TextMuted,
-                                        fontSize = 11.sp,
-                                        fontFamily = FontFamily.Monospace
+                                        fontSize = 13.sp,
+                                        lineHeight = 18.sp
                                     )
                                 }
                             }
@@ -309,93 +307,81 @@ private fun TopCyberneticAppBar(
         modifier = Modifier
             .fillMaxWidth()
             .background(CyberVoidBlack)
-            .border(0.5.dp, CyberCardBorder)
-            .padding(horizontal = 14.dp, vertical = 10.dp),
+            .padding(horizontal = 16.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Branding
-        Column {
+        Column(modifier = Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "RESONANCELAB",
-                    color = NeonCyan,
-                    fontSize = 17.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily.Monospace,
-                    letterSpacing = 1.sp
+                    text = "ResonanceLab",
+                    color = TextPrimary,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.SemiBold
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(if (isPro) QuantumViolet.copy(alpha = 0.25f) else CyberSurfaceVariant)
-                        .border(0.5.dp, if (isPro) QuantumViolet else CyberCardBorder, RoundedCornerShape(4.dp))
-                        .clickable(onClick = onOpenPaywall)
-                        .padding(horizontal = 5.dp, vertical = 2.dp)
-                ) {
-                    Text(
-                        text = if (isPro) "PRO ACCESS" else "FREE TIER",
-                        color = if (isPro) QuantumViolet else TextMuted,
-                        fontSize = 9.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = FontFamily.Monospace
-                    )
-                }
+                AssistChip(
+                    onClick = onOpenPaywall,
+                    label = {
+                        Text(
+                            text = if (isPro) "Pro" else "Free",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                    },
+                    colors = AssistChipDefaults.assistChipColors(
+                        containerColor = if (isPro) QuantumViolet.copy(alpha = 0.16f) else CyberSurfaceVariant,
+                        labelColor = if (isPro) QuantumViolet else TextSecondary
+                    ),
+                    border = null,
+                    modifier = Modifier.height(28.dp)
+                )
             }
             Text(
-                text = "NON-DESTRUCTIVE ACOUSTIC DSP",
+                text = "Acoustic material analysis",
                 color = TextMuted,
-                fontSize = 9.sp,
-                fontFamily = FontFamily.Monospace
+                fontSize = 12.sp
             )
         }
-
-        // Action Buttons
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(6.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // Snapshot Button
             IconButton(
                 onClick = onSnapshot,
                 modifier = Modifier
-                    .size(36.dp)
-                    .clip(RoundedCornerShape(8.dp))
+                    .size(40.dp)
+                    .clip(CircleShape)
                     .background(CyberSurfaceVariant)
-                    .border(0.5.dp, CyberCardBorder, RoundedCornerShape(8.dp))
             ) {
                 Icon(
                     imageVector = Icons.Default.CameraAlt,
-                    contentDescription = "Capture Snapshot",
-                    tint = NeonAmber,
-                    modifier = Modifier.size(18.dp)
+                    contentDescription = "Capture snapshot",
+                    tint = TextSecondary,
+                    modifier = Modifier.size(19.dp)
                 )
             }
-
-            // Capture Toggle Button (Start / Stop)
             Button(
                 onClick = onToggleCapture,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isCapturing) PlasmaPink else NeonCyan,
-                    contentColor = CyberVoidBlack
+                    containerColor = if (isCapturing) PlasmaPink.copy(alpha = 0.16f) else NeonCyan,
+                    contentColor = if (isCapturing) PlasmaPink else Color(0xFF06202B)
                 ),
-                shape = RoundedCornerShape(8.dp),
-                modifier = Modifier.height(36.dp)
+                shape = RoundedCornerShape(20.dp),
+                modifier = Modifier.height(40.dp),
+                contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = if (isCapturing) Icons.Default.Stop else Icons.Default.Mic,
-                        contentDescription = if (isCapturing) "Stop" else "Record",
-                        tint = CyberVoidBlack,
+                        contentDescription = null,
                         modifier = Modifier.size(16.dp)
                     )
-                    Spacer(modifier = Modifier.width(4.dp))
+                    Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = if (isCapturing) "HALT" else "CAPTURE",
-                        fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 11.sp
+                        text = if (isCapturing) "Stop" else "Record",
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 13.sp
                     )
                 }
             }
@@ -411,54 +397,59 @@ private fun ModeTabRow(
 ) {
     ScrollableTabRow(
         selectedTabIndex = selectedTab.ordinal,
-        containerColor = CyberDeepSlate,
-        contentColor = NeonCyan,
-        edgePadding = 8.dp,
+        containerColor = CyberVoidBlack,
+        contentColor = TextPrimary,
+        edgePadding = 16.dp,
         indicator = {},
         divider = {}
     ) {
         MainTab.values().forEach { tab ->
             val isSelected = selectedTab == tab
             val isTabProGated = (tab != MainTab.LIVE_SPECTRUM)
-
             Tab(
                 selected = isSelected,
                 onClick = { onSelectTab(tab) },
-                modifier = Modifier
-                    .padding(horizontal = 4.dp, vertical = 6.dp)
-                    .clip(RoundedCornerShape(6.dp))
-                    .background(if (isSelected) CyberSurfaceVariant else Color.Transparent)
-                    .border(
-                        0.5.dp,
-                        if (isSelected) NeonCyan.copy(alpha = 0.6f) else Color.Transparent,
-                        RoundedCornerShape(6.dp)
-                    )
-                    .padding(horizontal = 10.dp, vertical = 6.dp)
+                modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp)
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = tab.title,
-                        color = if (isSelected) NeonCyan else TextSecondary,
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = FontFamily.Monospace
-                    )
-                    if (isTabProGated && !isPro) {
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Box(
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(3.dp))
-                                .background(QuantumViolet.copy(alpha = 0.3f))
-                                .padding(horizontal = 3.dp, vertical = 1.dp)
-                        ) {
-                            Text(
-                                text = "PRO",
-                                color = QuantumViolet,
-                                fontSize = 7.sp,
-                                fontWeight = FontWeight.Bold
-                            )
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(if (isSelected) CyberSurfaceVariant else Color.Transparent)
+                            .padding(horizontal = 14.dp, vertical = 8.dp)
+                    ) {
+                        Text(
+                            text = tab.title.lowercase().replaceFirstChar { it.uppercase() },
+                            color = if (isSelected) TextPrimary else TextMuted,
+                            fontSize = 13.sp,
+                            fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal
+                        )
+                        if (isTabProGated && !isPro) {
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Box(
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .background(QuantumViolet.copy(alpha = 0.18f))
+                                    .padding(horizontal = 6.dp, vertical = 2.dp)
+                            ) {
+                                Text(
+                                    text = "Pro",
+                                    color = QuantumViolet,
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            }
                         }
                     }
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Box(
+                        modifier = Modifier
+                            .width(20.dp)
+                            .height(2.dp)
+                            .clip(CircleShape)
+                            .background(if (isSelected) NeonCyan else Color.Transparent)
+                    )
                 }
             }
         }
@@ -473,26 +464,24 @@ private fun ExportActionsCard(
     onUnlockPro: () -> Unit
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(1.dp, CyberCardBorder, RoundedCornerShape(10.dp)),
-        shape = RoundedCornerShape(10.dp),
-        colors = CardDefaults.cardColors(containerColor = CyberDeepSlate)
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = CyberDeepSlate),
+        border = androidx.compose.foundation.BorderStroke(1.dp, CyberCardBorder)
     ) {
-        Column(modifier = Modifier.padding(14.dp)) {
+        Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = "EXPORT CERTIFICATION & RAW TELEMETRY",
+                text = "Export report",
                 color = TextPrimary,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.Monospace
+                fontSize = 15.sp,
+                fontWeight = FontWeight.SemiBold
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "Generate comprehensive NDT acoustic evaluation PDF reports with FFT plots and raw CSV spectra.",
+                text = "Generate a PDF inspection report with spectrum plots, or download raw CSV data.",
                 color = TextSecondary,
-                fontSize = 11.sp,
-                lineHeight = 15.sp
+                fontSize = 13.sp,
+                lineHeight = 18.sp
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -505,10 +494,10 @@ private fun ExportActionsCard(
                     onClick = { if (isPro) onExportPdf() else onUnlockPro() },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isPro) NeonCyan else CyberSurfaceVariant,
-                        contentColor = if (isPro) CyberVoidBlack else NeonCyan
+                        containerColor = if (isPro) TextPrimary else CyberSurfaceVariant,
+                        contentColor = if (isPro) CyberVoidBlack else TextPrimary
                     ),
-                    shape = RoundedCornerShape(6.dp)
+                    shape = RoundedCornerShape(10.dp)
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
@@ -517,23 +506,13 @@ private fun ExportActionsCard(
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = "PDF REPORT",
-                            fontSize = 11.sp,
-                            fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold
-                        )
+                        Text(text = "PDF", fontSize = 13.sp, fontWeight = FontWeight.Medium)
                     }
                 }
-
-                Button(
+                FilledTonalButton(
                     onClick = { if (isPro) onExportCsv() else onUnlockPro() },
                     modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isPro) NeonEmerald else CyberSurfaceVariant,
-                        contentColor = if (isPro) CyberVoidBlack else NeonEmerald
-                    ),
-                    shape = RoundedCornerShape(6.dp)
+                    shape = RoundedCornerShape(10.dp)
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
@@ -542,12 +521,7 @@ private fun ExportActionsCard(
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = "CSV DATA",
-                            fontSize = 11.sp,
-                            fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold
-                        )
+                        Text(text = "CSV", fontSize = 13.sp, fontWeight = FontWeight.Medium)
                     }
                 }
             }
@@ -595,28 +569,21 @@ private fun SnapshotHistoryItem(
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = result.classification.type.label,
-                        color = typeColor,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = FontFamily.Monospace
+                        text = result.classification.type.label.lowercase().replaceFirstChar { it.uppercase() },
+                        color = TextPrimary,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Medium
                     )
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text(
-                        text = "[$dateStr]",
-                        color = TextMuted,
-                        fontSize = 10.sp,
-                        fontFamily = FontFamily.Monospace
-                    )
+                    Text(text = dateStr, color = TextMuted, fontSize = 12.sp)
                 }
 
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = "Peak: ${String.format("%.0f", result.metrics.peakFrequencyHz)} Hz | Q: ${String.format("%.1f", result.metrics.qFactor)} | Decay: ${String.format("%.1f", result.metrics.energyDecayRateDbPerSec)} dB/s",
+                    text = "${String.format("%.0f", result.metrics.peakFrequencyHz)} Hz · Q ${String.format("%.1f", result.metrics.qFactor)} · ${String.format("%.1f", result.metrics.energyDecayRateDbPerSec)} dB/s",
                     color = TextSecondary,
-                    fontSize = 10.sp,
-                    fontFamily = FontFamily.Monospace
+                    fontSize = 12.sp
                 )
             }
 

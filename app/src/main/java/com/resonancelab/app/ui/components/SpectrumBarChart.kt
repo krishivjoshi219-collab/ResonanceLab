@@ -33,7 +33,7 @@ import com.resonancelab.app.ui.theme.NeonEmerald
 import com.resonancelab.app.ui.theme.TextMuted
 
 /**
- * Real-time FFT Magnitude Spectrum Curve with Peak & Q-Factor Bandwidth Highlighter.
+ * Real-time FFT magnitude spectrum.
  */
 @Composable
 fun SpectrumBarChart(
@@ -47,9 +47,9 @@ fun SpectrumBarChart(
         modifier = modifier
             .fillMaxWidth()
             .height(heightDp.dp)
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(16.dp))
             .background(CyberDeepSlate)
-            .border(1.dp, CyberCardBorder, RoundedCornerShape(8.dp))
+            .border(1.dp, CyberCardBorder, RoundedCornerShape(16.dp))
     ) {
         Canvas(modifier = Modifier.fillMaxSize().padding(horizontal = 8.dp, vertical = 6.dp)) {
             val width = size.width
@@ -136,25 +136,18 @@ fun SpectrumBarChart(
             }
         }
 
-        // Header / Axis Labels
         Text(
-            text = "FFT SPECTRUM [0 - 24 kHz]",
-            color = NeonCyan,
-            fontSize = 10.sp,
-            fontFamily = FontFamily.Monospace,
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(start = 10.dp, top = 6.dp)
+            text = "Spectrum · 0–24 kHz",
+            color = TextSecondary,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Medium,
+            modifier = Modifier.align(Alignment.TopStart).padding(start = 12.dp, top = 8.dp)
         )
-
         Text(
-            text = "PEAK: ${String.format("%.0f", peakFrequencyHz)} Hz | Q: ${String.format("%.1f", qFactor)}",
-            color = NeonAmber,
-            fontSize = 10.sp,
-            fontFamily = FontFamily.Monospace,
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(end = 10.dp, top = 6.dp)
+            text = "${String.format("%.0f", peakFrequencyHz)} Hz · Q ${String.format("%.1f", qFactor)}",
+            color = TextMuted,
+            fontSize = 12.sp,
+            modifier = Modifier.align(Alignment.TopEnd).padding(end = 12.dp, top = 8.dp)
         )
     }
 }

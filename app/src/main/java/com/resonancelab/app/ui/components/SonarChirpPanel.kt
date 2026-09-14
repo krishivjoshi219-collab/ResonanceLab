@@ -60,11 +60,10 @@ fun SonarChirpPanel(
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .border(1.dp, if (isPro) QuantumViolet else CyberCardBorder, RoundedCornerShape(12.dp)),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = CyberDeepSlate)
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = CyberDeepSlate),
+        border = androidx.compose.foundation.BorderStroke(1.dp, CyberCardBorder)
     ) {
         Box(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.padding(14.dp)) {
@@ -83,11 +82,10 @@ fun SonarChirpPanel(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "ACTIVE SONAR (LFM CHIRP)",
-                            color = QuantumViolet,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = FontFamily.Monospace
+                            text = "Active sonar",
+                            color = TextPrimary,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.SemiBold
                         )
                     }
 
@@ -110,10 +108,10 @@ fun SonarChirpPanel(
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Text(
-                    text = "Emits 4 kHz → 16 kHz frequency-modulated sweep pulse. Cross-correlates microphone input for acoustic echo Time-of-Flight.",
+                    text = "Emits a 4–16 kHz sweep and measures echo time-of-flight for distance.",
                     color = TextSecondary,
-                    fontSize = 11.sp,
-                    lineHeight = 15.sp
+                    fontSize = 13.sp,
+                    lineHeight = 18.sp
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))

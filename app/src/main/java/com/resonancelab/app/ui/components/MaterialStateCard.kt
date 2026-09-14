@@ -71,18 +71,12 @@ fun MaterialStateCard(
     )
 
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .border(1.dp, themeColor.copy(alpha = 0.6f), RoundedCornerShape(12.dp)),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = CyberDeepSlate)
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = CyberDeepSlate),
+        border = androidx.compose.foundation.BorderStroke(1.dp, CyberCardBorder)
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(14.dp)
-        ) {
-            // Header: Status Badge & Confidence
+        Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -90,53 +84,36 @@ fun MaterialStateCard(
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Box(
-                        modifier = Modifier
-                            .size(10.dp)
-                            .clip(CircleShape)
-                            .background(themeColor)
+                        modifier = Modifier.size(8.dp).clip(CircleShape).background(themeColor)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = classification.type.label,
-                        color = themeColor,
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = FontFamily.Monospace,
-                        letterSpacing = 0.5.sp
+                        text = classification.type.label.lowercase().replaceFirstChar { it.uppercase() },
+                        color = TextPrimary,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold
                     )
                 }
-
                 Text(
-                    text = "${(animatedConfidence * 100).toInt()}% CONFIDENCE",
-                    color = themeColor,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily.Monospace
+                    text = "${(animatedConfidence * 100).toInt()}%",
+                    color = TextSecondary,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Medium
                 )
             }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Confidence Progress Bar
+            Spacer(modifier = Modifier.height(10.dp))
             LinearProgressIndicator(
                 progress = { animatedConfidence },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(6.dp)
-                    .clip(RoundedCornerShape(3.dp)),
+                modifier = Modifier.fillMaxWidth().height(4.dp).clip(CircleShape),
                 color = themeColor,
                 trackColor = CyberSurfaceVariant
             )
-
             Spacer(modifier = Modifier.height(10.dp))
-
-            // Classification Rationale
             Text(
                 text = classification.primaryReason,
                 color = TextSecondary,
-                fontSize = 12.sp,
-                lineHeight = 16.sp,
-                fontFamily = FontFamily.Default
+                fontSize = 13.sp,
+                lineHeight = 18.sp
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -204,26 +181,23 @@ private fun MetricPill(
 ) {
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(6.dp))
-            .background(CyberSurfaceVariant)
-            .border(0.5.dp, CyberCardBorder, RoundedCornerShape(6.dp))
-            .padding(horizontal = 6.dp, vertical = 6.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .background(CyberSurfaceVariant.copy(alpha = 0.6f))
+            .padding(horizontal = 10.dp, vertical = 8.dp)
     ) {
         Column {
             Text(
-                text = label,
+                text = label.lowercase().replaceFirstChar { it.uppercase() },
                 color = TextMuted,
-                fontSize = 9.sp,
-                fontFamily = FontFamily.Monospace,
-                fontWeight = FontWeight.Medium
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Normal
             )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = value,
-                color = accentColor,
-                fontSize = 12.sp,
-                fontFamily = FontFamily.Monospace,
-                fontWeight = FontWeight.Bold
+                color = TextPrimary,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.SemiBold
             )
         }
     }
