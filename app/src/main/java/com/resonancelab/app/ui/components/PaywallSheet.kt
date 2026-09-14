@@ -198,34 +198,39 @@ fun PaywallSheet(
 
             Spacer(modifier = Modifier.height(18.dp))
 
-            // Subscription Package Cards
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                PlanCard(
-                    title = "ANNUAL",
-                    price = "$49.99 / yr",
-                    tag = "SAVE 58%",
-                    isSelected = selectedPlanIndex == 0,
-                    modifier = Modifier.weight(1f),
-                    onClick = { selectedPlanIndex = 0 }
-                )
-                PlanCard(
-                    title = "MONTHLY",
-                    price = "$9.99 / mo",
-                    tag = "FLEXIBLE",
-                    isSelected = selectedPlanIndex == 1,
-                    modifier = Modifier.weight(1f),
-                    onClick = { selectedPlanIndex = 1 }
-                )
-                PlanCard(
-                    title = "LIFETIME",
-                    price = "$119.99",
-                    tag = "ONE-TIME",
-                    isSelected = selectedPlanIndex == 2,
-                    modifier = Modifier.weight(1f),
-                    onClick = { selectedPlanIndex = 2 }
+            val offerings = billingManager.offerings.value
+            val rcPackages = offerings?.current?.availablePackages.orEmpty()
+            val safeIndex = selectedPlanIndex.coerceIn(0, (rcPackages.size - 1).coerceAtLeast(0))
+            if (rcPackages.isNotEmpty()) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    rcPackages.take(3).forEachIndexed { index, rcPkg ->
+                        val title = rcPkg.identifier.uppercase().take(12)
+                        val price = rcPkg.storeProduct.price.formatted ?: rcPkg.identifier
+                        val tag = when {
+                            title.contains("ANNUAL") || title.contains("YEAR") -> "BEST VALUE"
+                            title.contains("LIFE") -> "ONE-TIME"
+                            else -> "FLEXIBLE"
+                        }
+                        PlanCard(
+                            title = title,
+                            price = price,
+                            tag = tag,
+                            isSelected = safeIndex == index,
+                            modifier = Modifier.weight(1f),
+                            onClick = { selectedPlanIndex = index }
+                        )
+                    }
+                }
+            } else {
+                Text(
+                    text = "Loading Pro plans… free trial available on first install.",
+                    color = TextMuted,
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
                 )
             }
 
@@ -241,13 +246,15 @@ fun PaywallSheet(
                 )
             }
 
-            // Primary Action Button
             Button(
                 onClick = {
                     if (activity != null) {
                         isProcessing = true
                         val offerings = billingManager.offerings.value
-                        val currentPackage: Package? = offerings?.current?.availablePackages?.firstOrNull()
+                        val pkgs = offerings?.current?.availablePackages.orEmpty()
+                        val currentPackage: Package? = pkgs.getOrNull(
+                            selectedPlanIndex.coerceIn(0, (pkgs.size - 1).coerceAtLeast(0))
+                        ) ?: pkgs.firstOrNull()
                         if (currentPackage != null) {
                             billingManager.purchasePackage(
                                 activity = activity,

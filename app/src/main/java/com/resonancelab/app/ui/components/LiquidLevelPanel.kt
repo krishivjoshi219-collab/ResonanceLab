@@ -240,6 +240,13 @@ fun LiquidLevelPanel(
 
                 if (!isPro) {
                     Spacer(modifier = Modifier.height(10.dp))
+                    Text(
+                        text = "Pro required for continuous estimation. Preview only.",
+                        color = TextMuted,
+                        fontSize = 12.sp,
+                        lineHeight = 16.sp
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
                     Button(
                         onClick = onUnlockPro,
                         modifier = Modifier
@@ -247,9 +254,9 @@ fun LiquidLevelPanel(
                             .height(40.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = CyberSurfaceVariant,
-                            contentColor = NeonCyan
+                            contentColor = TextPrimary
                         ),
-                        shape = RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(10.dp)
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
@@ -260,23 +267,13 @@ fun LiquidLevelPanel(
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
-                                text = "UNLOCK LIQUID LEVEL ESTIMATOR (PRO)",
-                                fontWeight = FontWeight.Bold,
-                                fontFamily = FontFamily.Monospace,
-                                fontSize = 11.sp
+                                text = "Unlock estimator (Pro)",
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 13.sp
                             )
                         }
                     }
                 }
-            }
-
-            if (!isPro) {
-                Text(
-                    text = "Pro required for continuous estimation. Preview only.",
-                    color = TextMuted,
-                    fontSize = 12.sp,
-                    modifier = Modifier.padding(top = 10.dp)
-                )
             }
         }
     }

@@ -197,7 +197,15 @@ fun SonarChirpPanel(
 
                 Spacer(modifier = Modifier.height(14.dp))
 
-                // Emit Button
+                if (!isPro) {
+                    Text(
+                        text = "Pro required to emit chirps. Telemetry preview is shown above.",
+                        color = TextMuted,
+                        fontSize = 12.sp,
+                        lineHeight = 16.sp
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                }
                 Button(
                     onClick = {
                         if (isPro) onTriggerChirp() else onUnlockPro()
@@ -209,7 +217,7 @@ fun SonarChirpPanel(
                         containerColor = if (isPro) QuantumViolet else CyberSurfaceVariant,
                         contentColor = TextPrimary
                     ),
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(10.dp)
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         if (!isPro) {
@@ -222,23 +230,12 @@ fun SonarChirpPanel(
                             Spacer(modifier = Modifier.width(6.dp))
                         }
                         Text(
-                            text = if (isPro) "EMIT SONAR CHIRP PULSE" else "UNLOCK ACTIVE SONAR (PRO)",
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = FontFamily.Monospace,
-                            fontSize = 12.sp
+                            text = if (isPro) "Emit chirp" else "Unlock sonar (Pro)",
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 13.sp
                         )
                     }
                 }
-            }
-
-            if (!isPro) {
-                Text(
-                    text = "Pro required to emit chirps. Telemetry preview is shown above.",
-                    color = TextMuted,
-                    fontSize = 12.sp,
-                    lineHeight = 16.sp,
-                    modifier = Modifier.padding(top = 10.dp)
-                )
             }
         }
     }

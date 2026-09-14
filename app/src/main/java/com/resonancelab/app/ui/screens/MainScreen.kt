@@ -60,12 +60,15 @@ import androidx.compose.ui.unit.sp
 import com.resonancelab.app.dsp.AcousticAnalysisResult
 import com.resonancelab.app.dsp.MaterialType
 import com.resonancelab.app.ui.components.CalibrationBar
+import com.resonancelab.app.ui.components.EmptyState
 import com.resonancelab.app.ui.components.LiquidLevelPanel
 import com.resonancelab.app.ui.components.MaterialStateCard
 import com.resonancelab.app.ui.components.PaywallSheet
+import com.resonancelab.app.ui.components.SectionHeader
 import com.resonancelab.app.ui.components.SonarChirpPanel
 import com.resonancelab.app.ui.components.SpectrogramCanvas
 import com.resonancelab.app.ui.components.SpectrumBarChart
+import com.resonancelab.app.ui.components.StatusBanner
 import com.resonancelab.app.ui.theme.CyberCardBorder
 import com.resonancelab.app.ui.theme.CyberDeepSlate
 import com.resonancelab.app.ui.theme.CyberSurfaceVariant
@@ -140,6 +143,18 @@ fun MainScreen(viewModel: ResonanceViewModel) {
             ) {
                 when (selectedTab) {
                     MainTab.LIVE_SPECTRUM -> {
+                        item {
+                            StatusBanner(
+                                isCapturing = isCapturing,
+                                rmsDbfs = analysisResult.metrics.rmsDbfs
+                            )
+                        }
+                        item {
+                            SectionHeader(
+                                title = "Live spectrum",
+                                subtitle = "Tap a surface, then watch peak, Q and decay settle."
+                            )
+                        }
                         item {
                             SpectrogramCanvas(
                                 spectrogramFlow = viewModel.spectrogramFlow,
@@ -251,21 +266,10 @@ fun MainScreen(viewModel: ResonanceViewModel) {
                         }
                         if (snapshotHistory.isEmpty()) {
                             item {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clip(RoundedCornerShape(12.dp))
-                                        .background(CyberDeepSlate)
-                                        .padding(20.dp),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        text = "No snapshots yet. Use the camera button above during a test to save a sample here.",
-                                        color = TextMuted,
-                                        fontSize = 13.sp,
-                                        lineHeight = 18.sp
-                                    )
-                                }
+                                EmptyState(
+                                    title = "No snapshots yet",
+                                    body = "Tap the camera button in the top bar during a test to save a sample here."
+                                )
                             }
                         } else {
                             items(snapshotHistory) { snapshot ->
@@ -546,11 +550,10 @@ private fun SnapshotHistoryItem(
     }
 
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(0.5.dp, CyberCardBorder, RoundedCornerShape(8.dp)),
-        shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(containerColor = CyberDeepSlate)
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = CyberDeepSlate),
+        border = androidx.compose.foundation.BorderStroke(1.dp, CyberCardBorder)
     ) {
         Row(
             modifier = Modifier

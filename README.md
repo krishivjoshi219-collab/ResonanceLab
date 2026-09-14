@@ -1,6 +1,11 @@
-# ResonanceLab (Acoustic Material Testing & Sonar App)
+# ResonanceLab — Tap. Listen. Know. | RevenueCat Shipaton 2026
 
-ResonanceLab is a production-grade native Android application engineered for non-destructive acoustic material testing (NDT), structural void detection, and active sonar echo location using Jetpack Compose, high-performance Digital Signal Processing (DSP), and RevenueCat monetization.
+> Pocket NDT lab: tap any wall, tank or slab → live 48 kHz resonance, hollow/solid/void verdict, sonar distance + liquid level, certified PDF. Free to try, Pro to certify.
+>
+> **Stack:** 100% Kotlin + Jetpack Compose + RevenueCat Paywalls + Entitlements (`pro_access`).
+> **Status:** First public Play release during Shipaton submission window. Judges: use `Paywall → Judge Bypass` for instant Pro, no purchase needed.
+
+ResonanceLab is a production-grade native Android instrument for non-destructive acoustic testing, void detection and sonar ranging, built to win on craft, monetization fit and real-world utility.
 
 ---
 
@@ -45,9 +50,31 @@ Managed via `BillingManager.kt` utilizing the RevenueCat SDK:
 ## 🎨 UI/UX Cybernetic Design
 
 - **Theme**: Obsidian Void (`#070B12`), Deep Slate (`#0D1524`), Cyber Cyan (`#00F0FF`), Electric Emerald (`#00FF9D`), Neon Amber (`#FFB800`), Quantum Violet (`#9D4EDD`), Plasma Pink (`#FF0055`).
-- **Waterfall Spectrogram**: 2D rolling bitmap buffer rendered on Compose `Canvas` with continuous heatmap color interpolation.
-- **Responsive Telemetry Grid**: Real-time HUD cards with animated confidence meters and metric pills.
-# ResonanceLab — Acoustic Material Analysis
+- **Waterfall Spectrogram**: zero-alloc Bitmap ring buffer on Compose `Canvas`, 60fps, subtle lab grid.
+- **Responsive Telemetry Grid**: animated confidence + peak/Q/decay/SNR pills.
+
+## Why It Wins (Shipaton Angles)
+
+### HAMM — Monetization that fits
+- Free: live waterfall + spectrum + tap classification + calibration. Enough to feel magic in 10s.
+- Pro (`pro_access` via RevenueCat): Active Sonar ToF, Liquid estimator, PDF + CSV export.
+- Paywall uses **live `Offerings.current`** (no hardcoded prices), shows trial eligibility, annual/monthly/lifetime, restore + judge bypass. Annual anchored as BEST VALUE for 58% saving story.
+- Growth loop: free tap → snapshot history → watermarked share → “Unlock certified PDF” → Pro.
+
+### Design — Calm lab instrument
+- Dark `#0B0E14` / `#11161F`, single sky accent `#38BDF8`, 16dp cards, sans semibold headers. No neon shouting.
+- Patterns: `InstrumentCard` + `SectionHeader` + `StatusBanner` + `EmptyState` + `SignalQualityMeter`. Subtle `#232E44` chart grid, amber peak dot.
+
+### Peace / Real-world use
+- Renters tap walls for voids, makers check prints, field techs gauge tanks without opening. No cloud, no PII, works offline after install.
+
+## Judge Test in 60s
+1. Grant mic → tap Record → tap table twice. See peak + Q + verdict settle.
+2. Top bar camera → EXPORT_LOGS → share snapshot PDF (Pro via Bypass).
+3. ACTIVE_SONAR → Emit chirp → distance cm. LIQUID_LEVEL → move height slider → fill %.
+4. Paywall → toggle Judge Bypass → all Pro unlocks, restore works offline.
+
+# ResonanceLab — Acoustic Material Analysis (Technical Deep Dive)
 
 Professional-grade Android instrument for non-destructive acoustic inspection.
 Tap a surface, read resonance, classify material, estimate distance / liquid level, export certified reports.
