@@ -208,7 +208,7 @@ fun PaywallSheet(
                 ) {
                     rcPackages.take(3).forEachIndexed { index, rcPkg ->
                         val title = rcPkg.identifier.uppercase().take(12)
-                        val price = rcPkg.storeProduct.price.formatted ?: rcPkg.identifier
+                        val price = rcPkg.product.price.formatted ?: rcPkg.identifier
                         val tag = when {
                             title.contains("ANNUAL") || title.contains("YEAR") -> "BEST VALUE"
                             title.contains("LIFE") -> "ONE-TIME"

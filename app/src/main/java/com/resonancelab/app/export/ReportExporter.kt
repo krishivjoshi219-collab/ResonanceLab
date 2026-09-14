@@ -31,7 +31,8 @@ class ReportExporter(private val context: Context) {
     /**
      * Generates a high-quality PDF Acoustic Inspection Report.
      */
-    suspend fun generatePdfReport(result: AcousticAnalysisResult): File = withContext(Dispatchers.IO) {
+    suspend fun generatePdfReport(result: AcousticAnalysisResult): File {
+        return withContext(Dispatchers.IO) {
         val document = PdfDocument()
         val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create() // A4 size in points
         val page = document.startPage(pageInfo)
@@ -201,6 +202,7 @@ class ReportExporter(private val context: Context) {
         }
         document.close()
         return file
+        }
     }
 
     /**

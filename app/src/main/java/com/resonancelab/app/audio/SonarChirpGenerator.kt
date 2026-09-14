@@ -162,7 +162,7 @@ class SonarChirpGenerator(
         for (i in 0 until chirpLen) {
             chirpEnergy += chirp[i] * chirp[i]
         }
-        val chirpNorm = sqrt(max(1e-9f, chirpEnergy))
+        val chirpNorm = sqrt(maxOf(1e-9f, chirpEnergy))
 
         // Skip initial direct speaker-to-mic bleed (first 2-3 ms)
         val minSkipSamples = (sampleRate * 0.003f).toInt()
@@ -176,7 +176,7 @@ class SonarChirpGenerator(
                 sigEnergy += s * s
             }
 
-            val norm = sqrt(max(1e-9f, sigEnergy)) * chirpNorm
+            val norm = sqrt(maxOf(1e-9f, sigEnergy)) * chirpNorm
             val normalizedCorr = if (norm > 1e-6f) (dot / norm) else 0.0f
 
             if (normalizedCorr > maxCorr) {
