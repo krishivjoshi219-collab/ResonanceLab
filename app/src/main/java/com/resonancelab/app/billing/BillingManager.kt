@@ -31,8 +31,13 @@ class BillingManager(
 ) {
     companion object {
         const val ENTITLEMENT_PRO = "pro_access"
-        // Replace with your RevenueCat public Google API key
+        // Student / Next Gen test build: no Play Store release required.
+        // Use RevenueCat sandbox key for store builds, fallback to local test mode.
+        // Replace with your RevenueCat public Google API key for production.
         const val REVENUECAT_API_KEY = "goog_resonancelab_demo_api_key"
+        private fun isDemoApiKey(key: String): Boolean {
+            return key.isBlank() || key.contains("demo_api_key") || key.contains("REPLACE")
+        }
     }
 
     private val _isRevenueCatPro = MutableStateFlow(false)
@@ -82,12 +87,21 @@ class BillingManager(
     }
 
     private fun initializeRevenueCat() {
+        // Next Gen student track: allow full offline test without store key.
+        if (isDemoApiKey(REVENUECAT_API_KEY)) {
+            _billingStatusMessage.value = "Test mode: local unlock enabled, no store purchase needed"
+            return
+        }
         try {
             Purchases.logLevel = com.revenuecat.purchases.LogLevel.DEBUG
-            Purchases.configure(
-                PurchasesConfiguration.Builder(context, REVENUECAT_API_KEY)
-                    .build()
-            )
+            try {
+                Purchases.configure(
+                    PurchasesConfiguration.Builder(context, REVENUECAT_API_KEY)
+                        .build()
+                )
+            } catch (_: Exception) {
+                // Already configured in hot restart / tests - just refresh.
+            }
 
             // Listen for customer info updates
             Purchases.sharedInstance.updatedCustomerInfoListener = { customerInfo ->
@@ -153,6 +167,12 @@ class BillingManager(
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
+        // Test builds with demo key simulate purchase instantly for judges.
+        if (isDemoApiKey(REVENUECAT_API_KEY) && _offerings.value?.current == null) {
+            _debugBypassEnabled.value = true
+            onSuccess()
+            return
+        }
         _isLoading.value = true
         try {
             Purchases.sharedInstance.purchaseWith(
@@ -208,8 +228,13 @@ class BillingManager(
 
     /**
      * Toggles Judge/Demo debug bypass to verify Pro tier capabilities without a credit card.
+     * Next Gen alias: Test Mode Unlock - same flag, student-friendly name.
      */
     fun setDebugBypass(enabled: Boolean) {
+        _debugBypassEnabled.value = enabled
+    }
+
+    fun setTestUnlock(enabled: Boolean) {
         _debugBypassEnabled.value = enabled
     }
 

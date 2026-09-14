@@ -109,6 +109,12 @@ class ResonanceViewModel(application: Application) : AndroidViewModel(applicatio
         _isPaywallOpen.value = false
     }
 
+    // Next Gen student test path: judges enable Pro without Play Store.
+    fun setTestProEnabled(enabled: Boolean) {
+        billingManager.setDebugBypass(enabled)
+        if (enabled) _isPaywallOpen.value = false
+    }
+
     fun calibrateNoiseFloor(rmsDbfs: Float) {
         audioManager.calibrateNoiseFloor(rmsDbfs)
         _statusMessage.value = "Noise floor calibrated: ${String.format("%.1f", rmsDbfs)} dBFS"

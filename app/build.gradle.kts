@@ -19,6 +19,8 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        // Student test build: override with -PrcApiKey=... for sandbox, else local test mode.
+        buildConfigField("String", "RC_API_KEY", "\"goog_resonancelab_demo_api_key\"")
     }
 
     buildTypes {
@@ -47,6 +49,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     packaging {

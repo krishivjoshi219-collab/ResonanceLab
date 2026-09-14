@@ -9,9 +9,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <!-- Student test build: required=false so judges can install on emulator without mic -->
     <uses-feature
         android:name="android.hardware.microphone"
-        android:required="true" />
+        android:required="false" />
 
     <application
         android:name=".ResonanceLabApp"
