@@ -47,3 +47,64 @@ Managed via `BillingManager.kt` utilizing the RevenueCat SDK:
 - **Theme**: Obsidian Void (`#070B12`), Deep Slate (`#0D1524`), Cyber Cyan (`#00F0FF`), Electric Emerald (`#00FF9D`), Neon Amber (`#FFB800`), Quantum Violet (`#9D4EDD`), Plasma Pink (`#FF0055`).
 - **Waterfall Spectrogram**: 2D rolling bitmap buffer rendered on Compose `Canvas` with continuous heatmap color interpolation.
 - **Responsive Telemetry Grid**: Real-time HUD cards with animated confidence meters and metric pills.
+# ResonanceLab — Acoustic Material Analysis
+
+Professional-grade Android instrument for non-destructive acoustic inspection.
+Tap a surface, read resonance, classify material, estimate distance / liquid level, export certified reports.
+
+## What It Does
+
+- **Live spectrum:** 48 kHz capture, 2048-pt FFT, Hann window, ~93 fps waterfall + magnitude curve.
+- **Classification:** hollow / solid / void / ambient from peak Hz, Q-factor, decay rate, centroid, SNR.
+- **Active sonar (Pro):** 4–16 kHz LFM chirp, matched-filter echo, time-of-flight to distance.
+- **Liquid level (Pro):** quarter-wave air-column shift to fill % / height cm.
+- **Export (Pro):** PDF inspection certificate + raw CSV spectra, share via FileProvider.
+- **Billing:** RevenueCat Pro entitlement + judge/demo bypass switch.
+
+## Architecture
+
+- `audio/AudioRecordManager` — capture loop, FFT dispatch, state flows.
+- `audio/AudioConfig` — 48 kHz, 2048 FFT, 512 hop, NYQUIST + BIN_RESOLUTION helpers.
+- `dsp/FastFourierTransform` — radix-2 FFT, magnitude spectrum, no alloc in loop.
+- `dsp/HannWindow` — precomputed coeffs, in-place apply.
+- `dsp/SpectralMetricsCalculator` — peak, centroid, Q (-3 dB), decay (linear fit), SNR, RMS.
+- `dsp/MaterialClassifier` — threshold + confidence model with SNR penalty.
+- `dsp/LiquidLevelEstimator` — `f = c/4L` inversion, clamped 0–100%.
+- `audio/SonarChirpGenerator` — LFM sweep builder + correlator input.
+- `ui/viewmodel/ResonanceViewModel` — capture, tab, snapshot history, export, paywall state.
+- `ui/components/*` — `SpectrogramCanvas` (Bitmap waterfall), `SpectrumBarChart`, `MaterialStateCard`, `CalibrationBar`, `SonarChirpPanel`, `LiquidLevelPanel`, `PaywallSheet`, `UiKit` (cards, banners, empty states).
+- `util/MeasurementFormat + AcousticValidation` — formatting + usability guards (pure, unit-testable).
+
+## DSP Notes
+
+- Q = `f0 / Δf(-3 dB)`; decay = least-squares dB/s over history; SNR = peak - calibrated floor.
+- Low SNR (<10 dB) linearly penalizes confidence — see `AcousticValidation.confidencePenaltyForLowSnr`.
+- Impact gate: `snr>=6 dB && rms>floor+3 dB && rms>-70 dBFS` — otherwise `AMBIENT_NOISE`.
+- Sonar distance: `d = t*c/2`, c=343.2 m/s; reject conf<0.3.
+- Liquid: `L_air = c/4f`, `fill = 1 - L_air/H`; H=10–100 cm slider.
+
+## UI System
+
+- Dark lab theme: `#0B0E14` bg, `#11161F` surface, `#38BDF8` primary, 16 dp cards, 12 dp pills.
+- Typography: Default sans, semibold headers, muted 12–13 sp body.
+- Patterns: `InstrumentCard` + `SectionHeader` + `StatusBanner` + `EmptyState` + `SignalQualityMeter`.
+- Charts: subtle `#232E44` grid, single accent line, amber peak dot.
+
+## Build / Run
+
+- Android Studio Ladybug+, minSdk 26+, JDK 17.
+- `local.properties`: `sdk.dir=...`
+- Debug run: `./gradlew :app:installDebug`
+- Release: `./gradlew :app:bundleRelease`
+- Tests: `./gradlew testDebugUnitTest`
+
+## Permissions
+
+- `RECORD_AUDIO` (runtime), `POST_NOTIFICATIONS` only if foreground-service capture is enabled.
+- No network except RevenueCat + Play Billing.
+
+## Known Limits / Roadmap
+
+- Single-mic phone DSP — not a calibrated NDT probe; keep 5–20 cm tap distance.
+- Noise floor is per-session; recalibrate on room change via Calibration card.
+- Next: multi-tap averaging, secondary-peak inharmonicity, cloud history, CSV import.
