@@ -100,13 +100,15 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = CyberVoidBlack
                 ) {
-                    if (hasAudioPermission) {
+                    var demoMode by remember { mutableStateOf(false) }
+                    if (hasAudioPermission || demoMode) {
                         MainScreen(viewModel = viewModel)
                     } else {
                         PermissionRequiredScreen(
                             onRequestPermission = {
                                 permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
-                            }
+                            },
+                            onEnterDemoMode = { demoMode = true }
                         )
                     }
                 }
@@ -136,7 +138,8 @@ class MainActivity : ComponentActivity() {
  */
 @Composable
 private fun PermissionRequiredScreen(
-    onRequestPermission: () -> Unit
+    onRequestPermission: () -> Unit,
+    onEnterDemoMode: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -222,5 +225,36 @@ private fun PermissionRequiredScreen(
                 )
             }
         }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Button(
+            onClick = onEnterDemoMode,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = CyberSurfaceVariant,
+                contentColor = TextPrimary
+            ),
+            shape = RoundedCornerShape(8.dp)
+        ) {
+            Text(
+                text = "CONTINUE IN DEMO MODE — NO MIC NEEDED",
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Monospace,
+                fontSize = 11.sp,
+                textAlign = TextAlign.Center
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = "Demo mode plays realistic hollow / solid / void taps instantly. Perfect for emulator + video.",
+            color = TextMuted,
+            fontSize = 11.sp,
+            textAlign = TextAlign.Center
+        )
     }
 }

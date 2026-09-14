@@ -227,14 +227,9 @@ class BillingManager(
     }
 
     /**
-     * Toggles Judge/Demo debug bypass to verify Pro tier capabilities without a credit card.
-     * Next Gen alias: Test Mode Unlock - same flag, student-friendly name.
+     * Test Mode Unlock for Next Gen judges: verify Pro tier without a credit card.
      */
     fun setDebugBypass(enabled: Boolean) {
-        _debugBypassEnabled.value = enabled
-    }
-
-    fun setTestUnlock(enabled: Boolean) {
         _debugBypassEnabled.value = enabled
     }
 

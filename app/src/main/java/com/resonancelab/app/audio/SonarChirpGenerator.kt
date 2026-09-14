@@ -167,10 +167,10 @@ class SonarChirpGenerator(
         // Skip initial direct speaker-to-mic bleed (first 2-3 ms)
         val minSkipSamples = (sampleRate * 0.003f).toInt()
 
-        for (d in minSkipSamples until maxDelay step 2) {
+        for (d in minSkipSamples until maxDelay) {
             var dot = 0.0f
             var sigEnergy = 0.0f
-            for (n in 0 until chirpLen step 2) {
+            for (n in 0 until chirpLen) {
                 val s = inputSamples[d + n]
                 dot += s * chirp[n]
                 sigEnergy += s * s
@@ -202,5 +202,4 @@ class SonarChirpGenerator(
         )
     }
 
-    private fun max(a: Float, b: Float): Float = kotlin.math.max(a, b)
 }

@@ -90,22 +90,4 @@ data class AcousticAnalysisResult(
     val isImpactDetected: Boolean = false,
     val sonarEcho: SonarEchoResult? = null,
     val liquidLevel: LiquidLevelResult? = null
-) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-        other as AcousticAnalysisResult
-        return timestampMs == other.timestampMs &&
-                metrics == other.metrics &&
-                classification == other.classification &&
-                isImpactDetected == other.isImpactDetected
-    }
-
-    override fun hashCode(): Int {
-        var result = timestampMs.hashCode()
-        result = 31 * result + metrics.hashCode()
-        result = 31 * result + classification.hashCode()
-        result = 31 * result + isImpactDetected.hashCode()
-        return result
-    }
-}
+)

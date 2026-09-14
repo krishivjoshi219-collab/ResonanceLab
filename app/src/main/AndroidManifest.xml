@@ -17,9 +17,9 @@
     <application
         android:name=".ResonanceLabApp"
         android:allowBackup="true"
-        android:icon="@android:drawable/ic_dialog_info"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@android:drawable/ic_dialog_info"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ResonanceLab">
         

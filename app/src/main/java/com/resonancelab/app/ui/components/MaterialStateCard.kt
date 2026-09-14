@@ -70,6 +70,20 @@ fun MaterialStateCard(
         label = "ConfidenceAnim"
     )
 
+    // Standout identity: Resonance DNA glyph — judges remember symbols, not pills.
+    val dnaGlyph = when (classification.type) {
+        MaterialType.HOLLOW_CAVITY -> "◯"
+        MaterialType.SOLID_SUBSTRATE -> "■"
+        MaterialType.BOUNDARY_VOID -> "◈"
+        MaterialType.AMBIENT_NOISE -> "·"
+    }
+    val dnaName = when (classification.type) {
+        MaterialType.HOLLOW_CAVITY -> "Ring DNA"
+        MaterialType.SOLID_SUBSTRATE -> "Block DNA"
+        MaterialType.BOUNDARY_VOID -> "Crack DNA"
+        MaterialType.AMBIENT_NOISE -> "Silence DNA"
+    }
+
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -87,6 +101,13 @@ fun MaterialStateCard(
                         modifier = Modifier.size(8.dp).clip(CircleShape).background(themeColor)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = dnaGlyph,
+                        color = themeColor,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
                     Column {
                         Text(
                             text = classification.type.label,
@@ -96,7 +117,7 @@ fun MaterialStateCard(
                             maxLines = 1
                         )
                         Text(
-                            text = classification.acousticSignature,
+                            text = "$dnaName · ${classification.acousticSignature}",
                             color = TextMuted,
                             fontSize = 12.sp,
                             maxLines = 1
@@ -175,6 +196,16 @@ fun MaterialStateCard(
                     value = "+${String.format("%.1f", metrics.snrDb)} dB",
                     accentColor = if (metrics.snrDb > 10) NeonEmerald else TextMuted,
                     modifier = Modifier.weight(1f)
+                )
+            }
+
+            if (classification.type != MaterialType.AMBIENT_NOISE) {
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(
+                    text = "$dnaGlyph $dnaName · ${metrics.peakFrequencyHz.toInt()}Hz Q${String.format("%.1f", metrics.qFactor)} · #Shipaton",
+                    color = themeColor.copy(alpha = 0.9f),
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Medium
                 )
             }
         }

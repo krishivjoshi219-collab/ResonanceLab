@@ -17,6 +17,8 @@ import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Report Exporter generating PDF inspection certificates and CSV telemetry data logs (Pro Tier).
@@ -29,7 +31,7 @@ class ReportExporter(private val context: Context) {
     /**
      * Generates a high-quality PDF Acoustic Inspection Report.
      */
-    fun generatePdfReport(result: AcousticAnalysisResult): File {
+    suspend fun generatePdfReport(result: AcousticAnalysisResult): File = withContext(Dispatchers.IO) {
         val document = PdfDocument()
         val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create() // A4 size in points
         val page = document.startPage(pageInfo)

@@ -60,6 +60,7 @@ import androidx.compose.ui.unit.sp
 import com.resonancelab.app.dsp.AcousticAnalysisResult
 import com.resonancelab.app.dsp.MaterialType
 import com.resonancelab.app.ui.components.CalibrationBar
+import com.resonancelab.app.ui.components.DemoTapBar
 import com.resonancelab.app.ui.components.EmptyState
 import com.resonancelab.app.ui.components.LiquidLevelPanel
 import com.resonancelab.app.ui.components.MaterialStateCard
@@ -143,6 +144,11 @@ fun MainScreen(viewModel: ResonanceViewModel) {
             ) {
                 when (selectedTab) {
                     MainTab.LIVE_SPECTRUM -> {
+                        item {
+                            DemoTapBar(
+                                onDemoTap = { viewModel.playDemoTap(it) }
+                            )
+                        }
                         item {
                             StatusBanner(
                                 isCapturing = isCapturing,

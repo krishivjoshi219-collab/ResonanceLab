@@ -1,136 +1,82 @@
-# ResonanceLab — Tap. Listen. Know. | RevenueCat Shipaton 2026
+# ResonanceLab — Tap. Listen. Know. | RevenueCat Shipaton 2026 (Next Gen)
 
 > Pocket NDT lab: tap any wall, tank or slab → live 48 kHz resonance, hollow/solid/void verdict, sonar distance + liquid level, certified PDF. Free to try, Pro to certify.
 >
 > **Stack:** 100% Kotlin + Jetpack Compose + RevenueCat Paywalls + Entitlements (`pro_access`).
-> **Status:** First public Play release during Shipaton submission window. Judges: use `Paywall → Judge Bypass` for instant Pro, no purchase needed.
+> **Track:** Next Gen Award — student entry. No Play release required. Judges: use `Paywall → Test Mode Unlock` for instant Pro, no purchase needed.
+> **Demo video:** [Add YouTube/Vimeo link here, <2 min] <!-- Required for Next Gen -->
+> **License:** MIT — see `LICENSE` (public open-source repo, required for Next Gen).
 
-ResonanceLab is a production-grade native Android instrument for non-destructive acoustic testing, void detection and sonar ranging, built to win on craft, monetization fit and real-world utility.
+ResonanceLab is a native Android instrument for non-destructive acoustic testing, void detection and sonar ranging.
 
----
+## Why Next Gen judges should care
 
-## 🔬 Core DSP & Physics Architecture
+1. **Clear, useful idea:** renters tap walls for voids, makers check prints, field techs gauge tanks without opening. Works offline, no cloud, no PII.
+2. **Instant demo, zero mic — no one else does this:** `Try instantly — no mic needed` plays realistic Hollow door / Solid wall / Void tile taps with full spectra. Judges on emulator see magic in <2s. Permission screen has `Continue in Demo Mode`.
+3. **Resonance DNA identity:** every verdict gets a glyph (◯ Ring / ■ Block / ◈ Crack) + `peakHz Q • #Shipaton` footer. Memorable in video, shareable for #BuildInPublic.
+4. **Thoughtful RevenueCat use:** free tier gives magic in 10s (waterfall + spectrum + tap classification + calibration + all 3 demo taps). Pro (`pro_access`) unlocks Active Sonar ToF, Liquid estimator, PDF + CSV export. Paywall uses live `Offerings.current` (no hardcoded prices), trial eligibility, annual/monthly/lifetime, restore + Test Mode Unlock.
+5. **Care in craft:** calm lab instrument theme (`#0B0E14` bg, `#11161F` surface, `#38BDF8` accent, 16dp cards), custom sonar-pulse launcher icon, `InstrumentCard` + `SectionHeader` + `StatusBanner` + `EmptyState` + `SignalQualityMeter`, subtle `#232E44` chart grid.
 
-### 1. Audio Capture Pipeline
-- **Engine**: Native `AudioRecord` streaming at 48,000 Hz, 16-bit PCM Mono.
-- **Buffer Safety**: Pre-allocated circular ring buffer (16,384 samples) with zero heap allocations during the audio loop to prevent Garbage Collection (GC) frame drops.
-- **Sliding Window**: 2048-sample analysis frames with a 512-sample hop size, yielding ~93.75 frames/second for fluid 60+ FPS visualization.
+## 90-second video script (steal this)
 
-### 2. Spectral Analysis Engine
-- **Windowing**: Hann (Hanning) window $w[n] = 0.5 \left(1 - \cos\left(\frac{2\pi n}{N - 1}\right)\right)$ applied to minimize spectral leakage.
-- **Radix-2 FFT**: In-place Cooley-Tukey Radix-2 Fast Fourier Transform with precomputed bit-reversal and trigonometric twiddle factor tables, computing 1024 magnitude bins ($0\text{ Hz}$ to $24\text{ kHz}$ at $\Delta f = 23.4375\text{ Hz/bin}$).
-- **Peak Frequency Interpolation**: Sub-bin parabolic quadratic peak estimation:
-  $$\delta = \frac{\alpha - \gamma}{2(\alpha - 2\beta + \gamma)}, \quad f_{\text{peak}} = (k_{\max} + \delta) \cdot \Delta f$$
-- **Spectral Centroid**: Center of mass of the frequency spectrum:
-  $$\text{Centroid} = \frac{\sum k \cdot \Delta f \cdot M[k]}{\sum M[k]}$$
-- **Quality Factor ($Q$)**: Sharpness of resonant modes computed via $-3\text{dB}$ half-power bandwidth:
-  $$Q = \frac{f_{\text{peak}}}{f_{\text{high},-3\text{dB}} - f_{\text{low},-3\text{dB}}}$$
-- **Energy Decay Rate**: Least-squares linear regression slope of RMS sound pressure ($\text{dB/s}$) during transient ring-down.
+0-10s: "Every wall sounds different. Tap. Listen. Know." → tap all 3 demo buttons, verdicts snap Hollow/Solid/Void.
+10-40s: grant mic, tap real table twice, show peak + Q + DNA glyph settle.
+40-70s: Test Mode Unlock → sonar chirp distance → liquid slider → PDF certificate.
+70-90s: "Free to try, Pro to certify — built with RevenueCat." Show paywall with live offerings.
 
-### 3. Non-Destructive Material Classification
-- **`HOLLOW / CAVITY`**: Sharp sustained resonance modes ($f > 1.1\text{ kHz}$, high $Q > 10.0$, low mechanical damping decay rate $< 32\text{ dB/s}$).
-- **`SOLID / SUBSTRATE`**: Rapid energy dissipation, high internal damping ($> 38\text{ dB/s}$), low $Q < 6.5$, broad low-frequency smear ($< 950\text{ Hz}$).
-- **`DELAMINATION / VOID`**: Secondary harmonic split modes and acoustic boundary impedance mismatch.
-
----
-
-## 💎 Monetization & Entitlements (RevenueCat)
-
-Managed via `BillingManager.kt` utilizing the RevenueCat SDK:
-- **Entitlement ID**: `pro_access`
-- **Free Tier**: Real-time Waterfall Spectrogram, Live Void Tap Detection, FFT Spectrum Curve, Calibration.
-- **Pro Tier**:
-  1. **Active Sonar Chirp Mode**: Linear Frequency Modulated (LFM) sweep pulse ($4\text{ kHz} \to 16\text{ kHz}$) with matched filter cross-correlation echo Time-of-Flight (ToF) distance calculation.
-  2. **Acoustic Liquid Level Estimator**: Quarter-wave acoustic column resonance shift calculation for closed/open container fill level gauging.
-  3. **Standardized PDF Certification & CSV Export**: ISO-compliant PDF inspection reports with embedded spectral plots and raw FFT CSV datasets.
-- **Judge / Reviewer Debug Bypass**: In-app switch toggle inside `PaywallSheet.kt` and top bar to immediately test Pro features without purchase or sandbox credentials.
-
----
-
-## 🎨 UI/UX Cybernetic Design
-
-- **Theme**: Obsidian Void (`#070B12`), Deep Slate (`#0D1524`), Cyber Cyan (`#00F0FF`), Electric Emerald (`#00FF9D`), Neon Amber (`#FFB800`), Quantum Violet (`#9D4EDD`), Plasma Pink (`#FF0055`).
-- **Waterfall Spectrogram**: zero-alloc Bitmap ring buffer on Compose `Canvas`, 60fps, subtle lab grid.
-- **Responsive Telemetry Grid**: animated confidence + peak/Q/decay/SNR pills.
-
-## Why It Wins (Shipaton Angles)
-
-### HAMM — Monetization that fits
-- Free: live waterfall + spectrum + tap classification + calibration. Enough to feel magic in 10s.
-- Pro (`pro_access` via RevenueCat): Active Sonar ToF, Liquid estimator, PDF + CSV export.
-- Paywall uses **live `Offerings.current`** (no hardcoded prices), shows trial eligibility, annual/monthly/lifetime, restore + judge bypass. Annual anchored as BEST VALUE for 58% saving story.
-- Growth loop: free tap → snapshot history → watermarked share → “Unlock certified PDF” → Pro.
-
-### Design — Calm lab instrument
-- Dark `#0B0E14` / `#11161F`, single sky accent `#38BDF8`, 16dp cards, sans semibold headers. No neon shouting.
-- Patterns: `InstrumentCard` + `SectionHeader` + `StatusBanner` + `EmptyState` + `SignalQualityMeter`. Subtle `#232E44` chart grid, amber peak dot.
-
-### Peace / Real-world use
-- Renters tap walls for voids, makers check prints, field techs gauge tanks without opening. No cloud, no PII, works offline after install.
-
-## Judge Test in 60s
-1. Grant mic → tap Record → tap table twice. See peak + Q + verdict settle.
-2. Top bar camera → EXPORT_LOGS → share snapshot PDF (Pro via Bypass).
-3. ACTIVE_SONAR → Emit chirp → distance cm. LIQUID_LEVEL → move height slider → fill %.
-4. Paywall → toggle Judge Bypass → all Pro unlocks, restore works offline.
-
-# ResonanceLab — Acoustic Material Analysis (Technical Deep Dive)
-
-Professional-grade Android instrument for non-destructive acoustic inspection.
-Tap a surface, read resonance, classify material, estimate distance / liquid level, export certified reports.
-
-## What It Does
+## What it does
 
 - **Live spectrum:** 48 kHz capture, 2048-pt FFT, Hann window, ~93 fps waterfall + magnitude curve.
 - **Classification:** hollow / solid / void / ambient from peak Hz, Q-factor, decay rate, centroid, SNR.
 - **Active sonar (Pro):** 4–16 kHz LFM chirp, matched-filter echo, time-of-flight to distance.
 - **Liquid level (Pro):** quarter-wave air-column shift to fill % / height cm.
 - **Export (Pro):** PDF inspection certificate + raw CSV spectra, share via FileProvider.
-- **Billing:** RevenueCat Pro entitlement + judge/demo bypass switch.
+- **Billing:** RevenueCat `pro_access` entitlement + Test Mode Unlock switch for judges.
 
-## Architecture
-
-- `audio/AudioRecordManager` — capture loop, FFT dispatch, state flows.
-- `audio/AudioConfig` — 48 kHz, 2048 FFT, 512 hop, NYQUIST + BIN_RESOLUTION helpers.
-- `dsp/FastFourierTransform` — radix-2 FFT, magnitude spectrum, no alloc in loop.
-- `dsp/HannWindow` — precomputed coeffs, in-place apply.
-- `dsp/SpectralMetricsCalculator` — peak, centroid, Q (-3 dB), decay (linear fit), SNR, RMS.
-- `dsp/MaterialClassifier` — threshold + confidence model with SNR penalty.
-- `dsp/LiquidLevelEstimator` — `f = c/4L` inversion, clamped 0–100%.
-- `audio/SonarChirpGenerator` — LFM sweep builder + correlator input.
-- `ui/viewmodel/ResonanceViewModel` — capture, tab, snapshot history, export, paywall state.
-- `ui/components/*` — `SpectrogramCanvas` (Bitmap waterfall), `SpectrumBarChart`, `MaterialStateCard`, `CalibrationBar`, `SonarChirpPanel`, `LiquidLevelPanel`, `PaywallSheet`, `UiKit` (cards, banners, empty states).
-- `util/MeasurementFormat + AcousticValidation` — formatting + usability guards (pure, unit-testable).
-
-## DSP Notes
+## DSP notes
 
 - Q = `f0 / Δf(-3 dB)`; decay = least-squares dB/s over history; SNR = peak - calibrated floor.
-- Low SNR (<10 dB) linearly penalizes confidence — see `AcousticValidation.confidencePenaltyForLowSnr`.
+- Low SNR (<10 dB) linearly penalizes confidence.
 - Impact gate: `snr>=6 dB && rms>floor+3 dB && rms>-70 dBFS` — otherwise `AMBIENT_NOISE`.
 - Sonar distance: `d = t*c/2`, c=343.2 m/s; reject conf<0.3.
 - Liquid: `L_air = c/4f`, `fill = 1 - L_air/H`; H=10–100 cm slider.
 
-## UI System
+## Architecture
 
-- Dark lab theme: `#0B0E14` bg, `#11161F` surface, `#38BDF8` primary, 16 dp cards, 12 dp pills.
-- Typography: Default sans, semibold headers, muted 12–13 sp body.
-- Patterns: `InstrumentCard` + `SectionHeader` + `StatusBanner` + `EmptyState` + `SignalQualityMeter`.
-- Charts: subtle `#232E44` grid, single accent line, amber peak dot.
+- `audio/AudioRecordManager` — capture loop, FFT dispatch, state flows.
+- `audio/AudioConfig` — 48 kHz, 2048 FFT, 512 hop.
+- `dsp/FastFourierTransform` — radix-2 FFT, magnitude spectrum, no alloc in loop.
+- `dsp/HannWindow` — precomputed coeffs, in-place apply.
+- `dsp/SpectralMetricsCalculator` — peak, centroid, Q (-3 dB), decay, SNR, RMS.
+- `dsp/MaterialClassifier` — threshold + confidence model with SNR penalty.
+- `dsp/LiquidLevelEstimator` — `f = c/4L` inversion, clamped 0–100%.
+- `audio/SonarChirpGenerator` — LFM sweep builder + correlator input.
+- `ui/viewmodel/ResonanceViewModel` — capture, tab, snapshot history, export, paywall state.
+- `ui/components/*` — `SpectrogramCanvas` (Bitmap waterfall), `SpectrumBarChart`, `MaterialStateCard`, `CalibrationBar`, `SonarChirpPanel`, `LiquidLevelPanel`, `PaywallSheet`, `UiKit`.
+- `util/MeasurementFormat + AcousticValidation` — formatting + usability guards (pure, unit-testable).
 
-## Build / Run
+## Judge test in 60s
+
+1. Grant mic → tap Record → tap table twice. See peak + Q + verdict settle.
+2. Top bar camera → EXPORT_LOGS → share snapshot PDF (Pro via Test Mode Unlock).
+3. ACTIVE_SONAR → Emit chirp → distance cm. LIQUID_LEVEL → move height slider → fill %.
+4. Paywall → toggle Test Mode Unlock → all Pro unlocks, restore works offline.
+
+## Build / run
 
 - Android Studio Ladybug+, minSdk 26+, JDK 17.
 - `local.properties`: `sdk.dir=...`
-- Debug run: `./gradlew :app:installDebug`
+- Debug run: `./gradlew :app:installDebug` (or open in Android Studio → Run)
 - Release: `./gradlew :app:bundleRelease`
 - Tests: `./gradlew testDebugUnitTest`
+- **No local build?** Push to `main` → GitHub Actions builds the debug APK in the cloud (`.github/workflows/build-apk.yml`) → download it from Actions → Artifacts → `ResonanceLab-debug-apk`. No secrets required (demo RevenueCat key).
 
 ## Permissions
 
 - `RECORD_AUDIO` (runtime), `POST_NOTIFICATIONS` only if foreground-service capture is enabled.
 - No network except RevenueCat + Play Billing.
 
-## Known Limits / Roadmap
+## Known limits / roadmap
 
 - Single-mic phone DSP — not a calibrated NDT probe; keep 5–20 cm tap distance.
 - Noise floor is per-session; recalibrate on room change via Calibration card.

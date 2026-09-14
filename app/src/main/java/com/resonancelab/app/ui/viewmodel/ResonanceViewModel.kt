@@ -115,6 +115,19 @@ class ResonanceViewModel(application: Application) : AndroidViewModel(applicatio
         if (enabled) _isPaywallOpen.value = false
     }
 
+    /** Standout demo hook: instant hollow/solid/void tap, no mic needed. */
+    fun playDemoTap(type: com.resonancelab.app.audio.DemoTapSimulator.DemoTapType) {
+        audioManager.emitDemoTap(type)
+        _statusMessage.value = when (type) {
+            com.resonancelab.app.audio.DemoTapSimulator.DemoTapType.HOLLOW_DOOR ->
+                "Demo tap: hollow door resonance — sharp sustain"
+            com.resonancelab.app.audio.DemoTapSimulator.DemoTapType.SOLID_WALL ->
+                "Demo tap: solid wall thud — fast damped decay"
+            com.resonancelab.app.audio.DemoTapSimulator.DemoTapType.VOID_TILE ->
+                "Demo tap: void tile split modes — delamination"
+        }
+    }
+
     fun calibrateNoiseFloor(rmsDbfs: Float) {
         audioManager.calibrateNoiseFloor(rmsDbfs)
         _statusMessage.value = "Noise floor calibrated: ${String.format("%.1f", rmsDbfs)} dBFS"
