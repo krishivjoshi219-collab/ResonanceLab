@@ -271,11 +271,11 @@ fun LiquidLevelPanel(
             }
 
             if (!isPro) {
-                Box(
-                    modifier = Modifier
-                        .matchParentSize()
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(CyberVoidBlack.copy(alpha = 0.65f))
+                Text(
+                    text = "Pro required for continuous estimation. Preview only.",
+                    color = TextMuted,
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(top = 10.dp)
                 )
             }
         }

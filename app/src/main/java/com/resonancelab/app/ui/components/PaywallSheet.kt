@@ -151,7 +151,7 @@ fun PaywallSheet(
             )
             Spacer(modifier = Modifier.height(6.dp))
             Text(
-                text = "Advanced sonar, liquid estimation, and certified reports.",
+                text = "Sonar, liquid estimation and certified reports for professional inspections.",
                 color = TextSecondary,
                 fontSize = 13.sp,
                 textAlign = TextAlign.Center,
@@ -172,26 +172,26 @@ fun PaywallSheet(
             ) {
                 FeatureRow(
                     icon = Icons.Default.Radar,
-                    title = "Active Sonar Chirp Radar",
-                    description = "Frequency-modulated sweep pulses with matched filter acoustic echo ToF distance estimation.",
+                    title = "Active sonar",
+                    description = "Swept chirp with echo time-of-flight distance.",
                     tint = QuantumViolet
                 )
                 FeatureRow(
                     icon = Icons.Default.WaterDrop,
-                    title = "Acoustic Liquid Level Estimator",
-                    description = "Quarter-wave air column resonance shift calculations for sealed & open container fill gauging.",
+                    title = "Liquid level",
+                    description = "Air-column resonance fill estimation.",
                     tint = NeonCyan
                 )
                 FeatureRow(
                     icon = Icons.Default.FileDownload,
-                    title = "PDF & CSV Inspection Reports",
-                    description = "Generate standardized non-destructive acoustic evaluation certificates with charts and raw FFT data.",
+                    title = "Reports",
+                    description = "PDF certificates and raw CSV spectra.",
                     tint = NeonEmerald
                 )
                 FeatureRow(
                     icon = Icons.Default.Star,
-                    title = "Continuous 48 kHz High-Res Streaming",
-                    description = "Uncapped 60+ FPS waterfall spectrogram recording with instant cloud/disk export.",
+                    title = "High-resolution streaming",
+                    description = "48 kHz live waterfall with export.",
                     tint = NeonAmber
                 )
             }
@@ -419,16 +419,15 @@ private fun FeatureRow(
             Text(
                 text = title,
                 color = TextPrimary,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.Monospace
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Medium
             )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = description,
                 color = TextSecondary,
-                fontSize = 11.sp,
-                lineHeight = 14.sp
+                fontSize = 12.sp,
+                lineHeight = 16.sp
             )
         }
     }

@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.resonancelab.app.audio.AudioConfig
@@ -31,6 +32,7 @@ import com.resonancelab.app.ui.theme.CyberVoidBlack
 import com.resonancelab.app.ui.theme.HeatmapColors
 import com.resonancelab.app.ui.theme.NeonAmber
 import com.resonancelab.app.ui.theme.NeonCyan
+import com.resonancelab.app.ui.theme.NeonEmerald
 import com.resonancelab.app.ui.theme.TextMuted
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -153,7 +155,7 @@ fun SpectrogramCanvas(
  * Draws vertical frequency guide lines.
  */
 private fun DrawScope.drawFrequencyGrid() {
-    val gridColor = Color(0x2200F0FF)
+    val gridColor = Color(0xFF232E44).copy(alpha = 0.9f)
     val numDivisions = 4
     for (i in 1 until numDivisions) {
         val x = size.width * (i.toFloat() / numDivisions)
@@ -172,16 +174,8 @@ private fun DrawScope.drawFrequencyGrid() {
 private fun DrawScope.drawPeakTracker(peakHz: Float, isHollow: Boolean) {
     val peakX = (peakHz / AudioConfig.NYQUIST_FREQ) * size.width
     val color = if (isHollow) NeonCyan else NeonAmber
-
-    // Glowing vertical line
     drawLine(
-        color = color.copy(alpha = 0.35f),
-        start = Offset(peakX, 0f),
-        end = Offset(peakX, size.height),
-        strokeWidth = 4f
-    )
-    drawLine(
-        color = color,
+        color = color.copy(alpha = 0.85f),
         start = Offset(peakX, 0f),
         end = Offset(peakX, size.height),
         strokeWidth = 1.5f

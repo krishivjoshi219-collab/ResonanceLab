@@ -420,7 +420,7 @@ private fun ModeTabRow(
                             .padding(horizontal = 14.dp, vertical = 8.dp)
                     ) {
                         Text(
-                            text = tab.title.lowercase().replaceFirstChar { it.uppercase() },
+                            text = tab.title,
                             color = if (isSelected) TextPrimary else TextMuted,
                             fontSize = 13.sp,
                             fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal
@@ -569,7 +569,7 @@ private fun SnapshotHistoryItem(
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = result.classification.type.label.lowercase().replaceFirstChar { it.uppercase() },
+                        text = result.classification.type.label,
                         color = TextPrimary,
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Medium

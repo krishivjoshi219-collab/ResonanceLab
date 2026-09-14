@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.resonancelab.app.audio.AudioConfig
@@ -31,6 +32,7 @@ import com.resonancelab.app.ui.theme.NeonAmber
 import com.resonancelab.app.ui.theme.NeonCyan
 import com.resonancelab.app.ui.theme.NeonEmerald
 import com.resonancelab.app.ui.theme.TextMuted
+import com.resonancelab.app.ui.theme.TextSecondary
 
 /**
  * Real-time FFT magnitude spectrum.
@@ -55,12 +57,12 @@ fun SpectrumBarChart(
             val width = size.width
             val height = size.height
 
-            // Draw horizontal dB grid lines
+            val gridColor = Color(0xFF232E44)
             val dbSteps = listOf(0.25f, 0.50f, 0.75f)
             dbSteps.forEach { ratio ->
                 val y = height * (1.0f - ratio)
                 drawLine(
-                    color = Color(0x1800F0FF),
+                    color = gridColor,
                     start = Offset(0f, y),
                     end = Offset(width, y),
                     strokeWidth = 1f

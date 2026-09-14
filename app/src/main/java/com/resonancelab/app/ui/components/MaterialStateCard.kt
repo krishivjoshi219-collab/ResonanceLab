@@ -87,12 +87,21 @@ fun MaterialStateCard(
                         modifier = Modifier.size(8.dp).clip(CircleShape).background(themeColor)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = classification.type.label.lowercase().replaceFirstChar { it.uppercase() },
-                        color = TextPrimary,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
+                    Column {
+                        Text(
+                            text = classification.type.label,
+                            color = TextPrimary,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            maxLines = 1
+                        )
+                        Text(
+                            text = classification.acousticSignature,
+                            color = TextMuted,
+                            fontSize = 12.sp,
+                            maxLines = 1
+                        )
+                    }
                 }
                 Text(
                     text = "${(animatedConfidence * 100).toInt()}%",
@@ -124,19 +133,19 @@ fun MaterialStateCard(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 MetricPill(
-                    label = "PEAK FREQ",
+                    label = "Peak",
                     value = "${String.format("%.0f", metrics.peakFrequencyHz)} Hz",
                     accentColor = NeonCyan,
                     modifier = Modifier.weight(1f)
                 )
                 MetricPill(
-                    label = "Q-FACTOR",
+                    label = "Q factor",
                     value = String.format("%.1f", metrics.qFactor),
                     accentColor = if (metrics.qFactor > 10) NeonCyan else NeonEmerald,
                     modifier = Modifier.weight(1f)
                 )
                 MetricPill(
-                    label = "DECAY RATE",
+                    label = "Decay",
                     value = "${String.format("%.1f", metrics.energyDecayRateDbPerSec)} dB/s",
                     accentColor = if (metrics.energyDecayRateDbPerSec > 40) NeonEmerald else NeonAmber,
                     modifier = Modifier.weight(1f)
@@ -150,19 +159,19 @@ fun MaterialStateCard(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 MetricPill(
-                    label = "CENTROID",
+                    label = "Centroid",
                     value = "${String.format("%.0f", metrics.spectralCentroidHz)} Hz",
                     accentColor = NeonAmber,
                     modifier = Modifier.weight(1f)
                 )
                 MetricPill(
-                    label = "RMS LEVEL",
+                    label = "Level",
                     value = "${String.format("%.1f", metrics.rmsDbfs)} dBFS",
                     accentColor = TextPrimary,
                     modifier = Modifier.weight(1f)
                 )
                 MetricPill(
-                    label = "SNR MARGIN",
+                    label = "SNR",
                     value = "+${String.format("%.1f", metrics.snrDb)} dB",
                     accentColor = if (metrics.snrDb > 10) NeonEmerald else TextMuted,
                     modifier = Modifier.weight(1f)
@@ -179,26 +188,34 @@ private fun MetricPill(
     accentColor: Color,
     modifier: Modifier = Modifier
 ) {
-    Box(
+    Column(
         modifier = modifier
             .clip(RoundedCornerShape(10.dp))
-            .background(CyberSurfaceVariant.copy(alpha = 0.6f))
+            .background(CyberSurfaceVariant.copy(alpha = 0.55f))
             .padding(horizontal = 10.dp, vertical = 8.dp)
     ) {
-        Column {
-            Text(
-                text = label.lowercase().replaceFirstChar { it.uppercase() },
-                color = TextMuted,
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Normal
-            )
-            Spacer(modifier = Modifier.height(2.dp))
-            Text(
-                text = value,
-                color = TextPrimary,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.SemiBold
-            )
-        }
+        Text(
+            text = label,
+            color = TextMuted,
+            fontSize = 11.sp,
+            fontWeight = FontWeight.Medium,
+            maxLines = 1
+        )
+        Spacer(modifier = Modifier.height(2.dp))
+        Text(
+            text = value,
+            color = TextPrimary,
+            fontSize = 13.sp,
+            fontWeight = FontWeight.SemiBold,
+            maxLines = 1
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(2.dp)
+                .clip(CircleShape)
+                .background(accentColor.copy(alpha = 0.35f))
+        )
     }
 }

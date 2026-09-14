@@ -231,13 +231,13 @@ fun SonarChirpPanel(
                 }
             }
 
-            // Pro Gating Overlay if not pro
             if (!isPro) {
-                Box(
-                    modifier = Modifier
-                        .matchParentSize()
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(CyberVoidBlack.copy(alpha = 0.65f))
+                Text(
+                    text = "Pro required to emit chirps. Telemetry preview is shown above.",
+                    color = TextMuted,
+                    fontSize = 12.sp,
+                    lineHeight = 16.sp,
+                    modifier = Modifier.padding(top = 10.dp)
                 )
             }
         }

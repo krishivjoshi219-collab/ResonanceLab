@@ -2,12 +2,15 @@ package com.resonancelab.app.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Professional lab instrument palette — restrained dark neutrals + single accent
+ // Professional lab instrument palette — neutral dark surfaces, single restrained accent
 val CyberVoidBlack = Color(0xFF0B0E14)
 val CyberDeepSlate = Color(0xFF11161F)
 val CyberSurfaceVariant = Color(0xFF1A2230)
 val CyberCardBorder = Color(0xFF232E44)
 val CyberCardGlow = Color.Transparent
+val SurfaceContainerLow = Color(0xFF0E131C)
+val SurfaceContainerHigh = Color(0xFF1E293B)
+val DividerSubtle = Color(0xFF1E293B)
 
 val NeonCyan = Color(0xFF38BDF8)
 val NeonEmerald = Color(0xFF34D399)
@@ -18,6 +21,11 @@ val QuantumViolet = Color(0xFFA78BFA)
 val TextPrimary = Color(0xFFF1F5F9)
 val TextSecondary = Color(0xFF94A3B8)
 val TextMuted = Color(0xFF64748B)
+val StatusOk = Color(0xFF34D399)
+val StatusWarn = Color(0xFFFBBF24)
+val StatusError = Color(0xFFF87171)
+val AccentPrimary = Color(0xFF38BDF8)
+val AccentSoft = Color(0xFF0C2E3E)
 
 // Professional spectrogram scale: dark navy -> slate blue -> teal -> amber (colorblind-safe-ish)
 val HeatmapColors = intArrayOf(
