@@ -59,6 +59,14 @@ class ResonanceViewModel(application: Application) : AndroidViewModel(applicatio
     val isPro: StateFlow<Boolean> = billingManager.isPro
     val isDebugBypass: StateFlow<Boolean> = billingManager.debugBypassEnabled
 
+    init {
+        viewModelScope.launch {
+            isPro.collect { pro ->
+                audioManager.setProStatus(pro)
+            }
+        }
+    }
+
     // User feedback toasts/alerts
     private val _statusMessage = MutableStateFlow<String?>(null)
     val statusMessage: StateFlow<String?> = _statusMessage.asStateFlow()

@@ -13,11 +13,13 @@ import com.revenuecat.purchases.interfaces.ReceiveOfferingsCallback
 import com.revenuecat.purchases.models.StoreTransaction
 import com.revenuecat.purchases.Offerings
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 /**
  * Manages RevenueCat SDK lifecycle, entitlement verification ("pro_access"),
@@ -55,7 +57,28 @@ class BillingManager(
     val isLoading: StateFlow<Boolean> = _isLoading
 
     init {
-        initializeRevenueCat()
+        initializeRevenueCatWithRetry()
+    }
+
+    private fun initializeRevenueCatWithRetry(maxAttempts: Int = 3, baseDelayMs: Long = 1000) {
+        scope.launch {
+            var attempt = 0
+            var success = false
+            while (attempt < maxAttempts && !success) {
+                try {
+                    initializeRevenueCat()
+                    success = true
+                } catch (e: Exception) {
+                    attempt++
+                    if (attempt >= maxAttempts) {
+                        _billingStatusMessage.value = "RevenueCat initialization failed after $maxAttempts attempts: ${e.message}"
+                        break
+                    }
+                    val delayMs = baseDelayMs * (1 shl (attempt - 1))
+                    delay(delayMs)
+                }
+            }
+        }
     }
 
     private fun initializeRevenueCat() {
